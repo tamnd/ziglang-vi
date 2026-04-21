@@ -1,0 +1,57 @@
+name: build tarballs
+
+on:
+  schedule:
+    - cron: "0 */22 * * *"
+  workflow_dispatch:
+    inputs:
+      zig_release_tag:
+        description: "ziglang/zig tag to build"
+        required: true
+        type: string
+        default: ""
+      zig_bootstrap_branch:
+        description: "ziglang/zig-bootstrap branch to checkout"
+        required: true
+        type: string
+        default: "master"
+
+concurrency:
+  group: tarballs
+  cancel-in-progress: false
+
+permissions:
+  actions: write
+  contents: read
+
+jobs:
+  build-tarballs:
+    timeout-minutes: 1320
+
+    runs-on:
+      - self-hosted
+      - ember
+
+    steps:
+      - name: Checkout
+        uses: https://codeberg.org/ziglang/checkout@19af6bac491e2534a4687a50ee84fa7f13258d28
+
+      - name: Build
+        env:
+          ZIG_RELEASE_TAG: ${{ inputs.zig_release_tag }}
+          ZIG_BOOTSTRAP_BRANCH: ${{ inputs.zig_bootstrap_branch }}
+        run: |
+          ZIG_GLOBAL_CACHE_DIR=$HOME/cache ZIG_LOCAL_CACHE_DIR=$HOME/cache \
+            nice -10 $HOME/deps/zig-x86_64-linux-0.16.0/zig run ./.forgejo/workflows/build-commit.zig -- $HOME/work /var/www/html ./.forgejo/workflows/index.json
+
+      # Forgejo does not support workflow_run triggers, so trigger the workflow
+      # through the API instead. This way is also better because we can pick the
+      # `main` ref explicitly, which is necessary to avoid a race condition with
+      # any deploy-website workflows scheduled since this workflow was started.
+      - name: Trigger deploy
+        run: |
+          curl -s -S -X POST \
+            -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d '{"ref": "main"}' \
+            https://codeberg.org/api/v1/repos/ziglang/ziglang.org/actions/workflows/deploy-website.yml/dispatches

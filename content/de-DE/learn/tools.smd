@@ -1,0 +1,41 @@
+---
+.title = "Werkzeuge",
+.author = "",
+.date = @date("2024-09-14:00:00:00"),
+.layout = "page.shtml",
+.custom = {
+	"mobile_menu_title": "Werkzeuge",
+	"toc": true,
+},
+---
+
+# [Language-Server]($heading.id('lsp'))
+Language-Server sind editorunabhängige Tools, die Syntaxhervorhebung, Autovervollständigung und viele andere Funktionen bieten. Ziehe die Verwendung eines Language-Servers gegenüber einer Erweiterung zur Syntaxhervorhebung in Betracht, um eine umfassendere Entwicklungsunterstützung zu erhalten.
+
+- [zigtools/zls](https://github.com/zigtools/zls)
+
+# [Text-Editoren]($heading.id('editors'))
+Editor-spezifische Werkzeuge oder Erweiterungen, meist Syntax-Highlighter.
+
+## VS Code
+- [ziglang/vscode-zig](https://codeberg.org/ziglang/vscode-zig)
+
+## Visual Studio
+- [ZigVS](https://marketplace.visualstudio.com/items?itemName=LuckystarStudio.ZigVS)
+
+## Sublime Text
+- [ziglang/sublime-zig-language](https://codeberg.org/ziglang/sublime-zig-language)
+
+## Vim/Neovim
+- [ziglang/zig.vim](https://codeberg.org/ziglang/zig.vim)
+
+## Emacs
+- [ziglang/zig-mode](https://codeberg.org/ziglang/zig-mode)
+
+## Kate
+- [ziglang/kde-syntax-highlighting](https://codeberg.org/ziglang/kde-syntax-highlighting)
+
+## JetBrains-Familie ( IntelliJ IDEA, Fleet und weitere)
+- [ZigBrains](https://plugins.jetbrains.com/plugin/22456-zigbrains)
+- [Zig Fleet Plugin](https://plugins.jetbrains.com/plugin/26070-zig)
+

@@ -1,0 +1,80 @@
+<extend template="base.shtml">
+<title id="title" :text="$page.title"></title>
+<head id="head">
+  <link
+    type="text/css"
+    rel="stylesheet"
+    href="$site.asset('css/home.css').link()"
+  >
+  <style>
+    .changelist {
+    margin-top: 2em;
+  }
+  .changelist > div {
+    /* Right-left padding and right-left margin must be opposite to keep text aligned */
+    margin: 0 -20px;
+    padding: 5px 20px;
+    margin-bottom: 1em;
+  }
+  .changelist > div > h1 {
+    margin-top: 0;
+  }
+
+  .change {
+    margin-top: 2em;
+  }
+
+  div[id]:target {
+    animation: pulse-div 2s ease-in-out 1 forwards;
+  }
+
+  @keyframes pulse-div {
+    0%,
+    100% {
+      background-color: #eee;
+    }
+
+    50% {
+      background-color: #fff;
+    }
+  }
+
+  @media (prefers-color-scheme:dark) {
+    div[id]:target {
+      animation: pulse-div 2s ease-in-out 1 forwards;
+    }
+
+    @keyframes pulse-div {
+      0%,
+      100% {
+        background-color: #222;
+      }
+
+      50% {
+        background-color: #111;
+      }
+    }
+  }
+  </style>
+</head>
+<div id="content">
+  <div class="container">
+    <h1 class="title" :text="$page.title"></h1>
+    <p>This page contains a curated list of recent changes to main branch Zig.</p>
+    <p>
+      Also available as an
+      <a href="/devlog/index.xml">RSS feed</a>.
+    </p>
+    <p>
+      This page contains entries for the year <span :text="$page.date.format('2006')"></span>. Other years are available in
+      <a href="/devlog/">the Devlog archive page</a>.
+    </p>
+    <div class="changelist" :loop="$page.contentSections()">
+      <div id="$loop.it.id">
+        <span :text="$loop.it.id.parseDate().format('January 02, 2006')"></span>
+        <h1><a href="$loop.it.id.prefix('#')" :html="$loop.it.heading()"></a></h1>
+        <ctx :html="$loop.it.htmlNoHeading()"></ctx>
+      </div>
+    </div>
+  </div>
+</div><div id="languages-menu"></div>

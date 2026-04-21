@@ -1,0 +1,53 @@
+---
+.title = "Impara",
+.author = "",
+.date = @date("2024-08-07:00:00:00"),
+.layout = "learn.shtml",
+.custom = {
+	"mobile_menu_title": "Impara",
+},
+---
+# [Impara]($section.id('learn'))
+Questa sezione contiene alcune risorse utili per iniziare ad imparare Zig e la filosofia con cui è sviluppato.
+
+## [Guide]($section.id('guides'))
+Questa sezione in futuro verrà integrata nella documentazione della libreria standard, ma nel frattempo è disponibile qui.
+
+- [Zig Build System](./build-system/)
+Introduzione al build system di Zig.
+
+## Introduzione
+Pagine di introduzione a Zig, ognuna dedicata a programmatori con diversi livelli di esperienza.
+
+- [Panoramica approfondita](./overview/)
+Una panoramica completa delle caratteristiche di Zig, con una prospettiva da programmazione di sistemi.
+- [Perchè Zig quando ci sono già C++, D e Rust?](./why_zig_rust_d_cpp/)
+Un'introduzione a Zig per programmatori C++, D, o Rust.
+- [Esempi](./samples/)
+Una lista di esempi di codice per farsi un'idea di Zig.
+- [Strumenti](./tools/)
+Una lista di strumenti utili per facilitare la scrittura di codice in Zig.
+
+
+## Inizia qui!
+Se hai deciso di iniziare a programmare in Zig, questa guida ti aiuterà ad ottenere e configurare tutto il necessario.
+
+- [Inizia qui](./getting-started)
+
+## Materiale didattico online
+- [Introduction to Zig: a project-based book](https://github.com/pedropark99/zig-book)
+Un libro aperto, tecnico e introduttivo per Zig.
+- [zig.guide](https://zig.guide)
+Un'introduzione strutturata a Zig, creata da [Sobeston](https://github.com/sobeston).
+- [Ziglings](https://ziglings.org)
+Impara Zig risolvendo problemi in una serie di piccoli programmi.
+- [Zig su Exercism](https://exercism.org/tracks/zig)
+Completa degli esercizi di programmazione e ricevi supporto dagli esperti per padroneggiare Zig.
+- [Learning Zig](https://www.openmymind.net/learning_zig/)
+Breve introduzione a Zig adatta a sviluppatori che vengono da linguaggi con gestione automatica della memoria (garbage-collection).
+
+## Video e articoli consigliati
+- [Road to Zig 1.0](https://www.youtube.com/watch?v=Gv2I7qTux7g) [video]
+Video di [Andrew Kelley](https://andrewkelley.me) che presenta il linguaggio Zig e la sua filosofia.
+- [Zig's New Relationship with LLVM](https://kristoff.it/blog/zig-new-relationship-llvm/)
+Un articolo sulla realizzazione del compilatore self-hosted di Zig, citato anche in [un articolo  di lwn.net](https://lwn.net/Articles/833400/).

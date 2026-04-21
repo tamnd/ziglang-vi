@@ -1,0 +1,20 @@
+---
+.title = "Download",
+.author = "",
+.date = @date("2024-09-14:00:00:00"),
+.layout = "download.shtml",
+.custom = {
+	"mobile_menu_title": "Download",
+	"OSs": ["Windows", "macOS", "Linux", "FreeBSD", "NetBSD", "OpenBSD"],
+},
+---
+# Freigaben
+Du kannst [Zig durch einen Paketmanager installieren]($link.page('learn/getting-started').ref('managers')).
+
+Es gibt auch eine [JSON-Version dieser Seite]($link.siteAsset('download/index.json')).
+
+Alle Dateien sind mit [minisign](https://jedisct1.github.io/minisign/) signiert und verwenden diesen öffentlichen Schlüssel:
+
+```
+RWSGOq2NVecA2UPNdBUZykf1CCb147pkmdtYxgb3Ti+JO/wCYvhbAb/U
+```

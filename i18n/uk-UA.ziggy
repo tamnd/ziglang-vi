@@ -1,0 +1,28 @@
+.back = "← Назад до",
+// index.shtml
+.community = "Приєднайтеся до спільноти",
+.source = "Вихідний код",
+.get_started = "ПОЧАТИ",
+.latest_release = "Останній Реліз:",
+.documentation = "Документація",
+.changes = "Зміни",
+.overview = "Повний огляд",
+.code_samples = "Більше зразків коду",
+.all_communities = "Переглянути всі спільноти",
+.learn_more = "Дізнайтеся більше",
+.github_sponsors_update_frequency = "Цей розділ оновлюється щодня.",
+// learn.shtml
+.version_unstable = "Unstable",
+.version_latest_stable = "Latest Stable",
+// download.shtml
+.release_notes = "Примітки до релізу",
+.language_reference = "Довідник мови",
+.std_docs = "Документація Стандартної Бібліотеки",
+.download_source = "Вихідний код",
+.download_os = "Операційна система",
+.download_arch = "Архітектура",
+.download_filename = "Ім'я файлу",
+.download_sig = "Підпис",
+.download_size = "Розмір",
+// locale.shtml
+.languages_menu = "This page is also available in the following languages:",

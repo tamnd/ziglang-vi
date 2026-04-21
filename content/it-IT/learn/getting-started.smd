@@ -1,0 +1,159 @@
+---
+.title = "Inizia qui",
+.author = "",
+.date = @date("2024-08-07:00:00:00"),
+.layout = "page.shtml",
+.custom = {
+	"mobile_menu_title": "Inizia qui",
+	"toc": true,
+},
+---
+
+# Rilasci stabili o build nightly?
+Zig non ha ancora raggiunto la versione 1.0 e il ciclo di rilasci corrente è legato ai nuovi rilasci di LLVM, cha avvengono
+circa ogni 6 mesi. In sostanza, **i rilasci di Zig tendono ad essere distanti tra loro e a diventare obsoleti in poco tempo,
+per via dei rapidi progressi nello sviluppo**.
+
+Puoi tranquillamente provare Zig con una versione stabile, ma se decidi che Zig ti piace
+e vuoi approfondire, **ti incoraggiamo a passare alle build nightly**, principalmente perchè
+in questo modo ti sarà più semplice ricevere supporto: la maggior parte della comunità
+e siti come [zig.guide](https://zig.guide) seguono gli sviluppi più recenti per le ragioni espresse qui sopra.
+
+La buona notizia è che è molto semplice passare da una versione di Zig all'altra, o persino avere più versioni di Zig installate allo stesso tempo: i rilasci di Zig sono archivi contenenti tutto il necessario e li puoi posizionare dovunque nel tuo sistema.
+
+
+# Installare Zig
+## [Download diretto]($heading.id('direct'))
+Questo è il metodo più semplice di ottenere Zig: scarica un archivio per la tua piattaforma dalla pagina [Download](/download),
+estrailo in una cartella e aggiungila al tuo `PATH` per poter richiamare `zig` da qualunque posizione.
+
+### Impostare il PATH su Windows
+Per impostare la variabile d'ambiente PATH su Windows, esegui **uno** dei seguenti comandi in un terminale PowerShell.
+Scegli se vuoi applicare questo cambiamento per tutti gli utenti (richiede l'avvio di PowerShell con privilegi di amministratore)
+o solo per l'utente attuale, e **assicurati di modificare il comando in modo che il percorso corrisponda a quello della cartella che contiene Zig**.
+Il carattere `;` prima di `C:` non è un errore di battitura.
+
+Per tutti gli utenti (Powershell con **privilegi di amministratore**):
+```
+[Environment]::SetEnvironmentVariable(
+   "Path",
+   [Environment]::GetEnvironmentVariable("Path", "Machine") + ";C:\your-path\zig-windows-x86_64-your-version",
+   "Machine"
+)
+```
+
+Per l'utente attuale (Powershell):
+```
+[Environment]::SetEnvironmentVariable(
+   "Path",
+   [Environment]::GetEnvironmentVariable("Path", "User") + ";C:\your-path\zig-windows-x86_64-your-version",
+   "User"
+)
+```
+Quando hai finito, riavvia PowerShell.
+
+### Impostare il PATH su Linux, macOS, BSD
+Aggiungi il percorso del tuo eseguibile `zig` alla tua variabile d'ambiente PATH.
+
+Di solito questo si fa aggiungendo una riga di esportazione allo script di avvio della shell (`.profile`, `.zshrc`, ...)
+```bash
+export PATH=$PATH:~/path/to/zig
+```
+Quando hai finito, puoi eseguire `source` sul tuo script di avvio opppure riavviare la shell.
+
+
+
+
+## [Gestori di pacchetti]($heading.id('managers'))
+### Windows
+**WinGet**
+Zig è disponibile su [WinGet](https://github.com/microsoft/winget-pkgs/tree/master/manifests/z/zig/zig).
+```
+winget install -e --id zig.zig
+```
+
+**Chocolatey**
+Zig è disponibile su [Chocolatey](https://chocolatey.org/packages/zig).
+```
+choco install zig
+```
+
+**Scoop**
+Zig è disponibile su [Scoop](https://scoop.sh/#/apps?q=zig&id=7e124d6047c32d426e4143ab395d863fc9d6d491).
+```
+scoop install zig
+```
+Ultima [dev build](https://scoop.sh/#/apps?q=zig&id=921df07e75042de645204262e784a17c2421944c):
+```
+scoop bucket add versions
+scoop install versions/zig-dev
+```
+
+### macOS
+
+**Homebrew**
+Rilascio stabile più recente:
+```
+brew install zig
+```
+
+**MacPorts**
+```
+sudo port install zig
+```
+
+### Linux
+Zig è presente anche in molti gestori di pacchetti per Linux. [Qui]($link.ref('managers'))
+puoi trovare una lista aggiornata, tuttavia alcuni gestori potrebbero fornire vecchie versioni di Zig.
+
+## [Compilare dal codice sorgente]($heading.id('source'))
+[Qui](https://codeberg.org/ziglang/zig#building-from-source)
+puoi trovare maggiori informazioni su come compilare Zig da sorgente per Linux, macOS e Windows.
+
+# Strumenti consigliati
+## Evidenziatori di sintassi e LSP
+Tutti i principali editor di codice supportano l'evidenziazione della sintassi di Zig.
+Alcuni la forniscono automaticamente, altri richiedono l'installazione di un plugin.
+
+Se vuoi una maggiore integrazione tra Zig e il tuo editor, dai un'occhiata a [zigtools/zls](https://github.com/zigtools/zls).
+
+Se vuoi sapere cos'altro c'è a disposizione, dai un'occhiata alla sezione [Strumenti](tools).
+
+
+# Esegui Hello World
+Se hai completato il processo di installazione correttamente, ora dovresti poter richiamare il compilatore Zig dalla tua shell.
+Proviamolo subito creando il tuo primo programma in Zig!
+
+Vai alla cartella che conterrà questo progetto ed esegui questi comandi:
+```bash
+mkdir hello-world
+cd hello-world
+zig init
+```
+
+Dovresti vedere questo output:
+```
+info: created build.zig
+info: created build.zig.zon
+info: created src/main.zig
+info: created src/root.zig
+info: see `zig build --help` for a menu of options
+```
+
+Eseguire `zig build run` dovrebbe compilare il tutto ed eseguirlo, mostrando questo:
+```
+All your codebase are belong to us.
+Run `zig build test` to run the tests.
+```
+
+Congratulazioni, ora hai un'installazione di Zig funzionante!
+
+# Prossimi passi
+**Dai un'occhiata alle altre risorse presenti nella sezione [Impara](/learn)**, assicurati di trovare la documentazione corretta per la tua versione di Zig (nota: per le build nightly usa la documentazione `master`) e fai un salto su [zig.guide](https://zig.guide).
+
+Zig è un progetto relativamente giovane e purtroppo al momento non abbiamo ancora le risorse per produrre documentazione dettagliata e materiali didattici
+per ogni cosa, quindi ti consigliamo di [unirti a una delle comunità Zig](https://github.com/ziglang/zig/wiki/Community)
+per ricevere supporto quando non sai come risolvere un problema. Consigliamo inoltre di dare un'occhiata ad iniziative come [Zig SHOWTIME](https://zig.show).
+
+Infine, se Zig ti piace e vuoi aiutare ad accelerare lo sviluppo del progetto, puoi [sostenerci con donazione alla Zig Software Foundation](/zsf)
+<img src="/heart.svg" style="vertical-align:middle; margin-right: 5px">.

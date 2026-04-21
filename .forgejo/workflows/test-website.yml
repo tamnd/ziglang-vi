@@ -1,0 +1,32 @@
+name: test website
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+# This cancels older workflow runs on pull requests while ensuring that there
+# are no concurrency limits on manual workflow dispatches.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    timeout-minutes: 30
+
+    runs-on:
+      - self-hosted
+      - x86_64-linux
+
+    steps:
+      - name: Checkout
+        uses: https://codeberg.org/ziglang/checkout@19af6bac491e2534a4687a50ee84fa7f13258d28
+
+      - name: Setup Zig
+        uses: https://codeberg.org/mlugg/setup-zig@d1434d08867e3ee9daa34448df10607b98908d29
+
+      - name: Build
+        run: zig build --summary new

@@ -1,0 +1,84 @@
+---
+.title = "Core Team Member Spotlight: Alex Rønne Petersen",
+.date = "2026-04-18T00:00:00.000Z",
+.author = "Andrew Kelley",
+.layout = "news-page.shtml",
+---
+
+Author: Andrew Kelley
+
+Alex joined the team in October of 2024. Hard to believe it's already been a year and a half since then!
+
+```=html
+<img src="https://ziglang.org/news/core-team-spotlight-alexrp/alexrp-840x560.webp" alt="Photograph of Alex looking sharp" style="float: right; padding: 1em">
+```
+
+Alex has demonstrated an insatiable appetite for expanding Zig's support for various targets.
+The [download page](/download/) tells the story:
+
+```=html
+<ol>
+<li><a href="/download/#release-0.13.0">0.13.0 release</a> - 4 months before joining, binary artifacts for 12 different targets provided, and the FreeBSD one had to be created by renting a server from the cloud because Zig lacked cross-compilation support targeting FreeBSD.</li>
+<li><a href="/download/#release-0.14.1">0.14.1 release</a> - 6 months after joining, we didn’t bother to rent a FreeBSD server this time, but still the number went up to 13 different targets because Alex got loongarch64 and s390x working on Linux.</li>
+<li><a href="/download/#release-0.15.1">0.15.1 release</a> - 10 months after joining, Alex got NetBSD and FreeBSD cross-compilation support working and the number jumped up to a whopping 23 different targets!</li>
+<li><a href="/download/#release-0.16.0">0.16.0 release</a> - 18 months after joining, he got OpenBSD cross-compilation support working too and now there are 26 different targets.</li>
+</ol>
+```
+
+This is just the visible stuff. Under the hood, he has contributed countless bug fixes
+to the various operating system API bits in the Zig standard library, leading to
+tangible improvements like
+[greatly expanded target support for segfault handling and unwinding](https://ziglang.org/download/0.16.0/release-notes.html#Expanded-target-support-for-segfault-handlingunwinding).
+These are the kinds of improvements that you don't realize you miss until you don't have them;
+the invisible quality of life enhancements that silently, thanklessly prevent
+your day from being ruined. You can see his meticulous work reflected in the
+[target support in the release notes](https://ziglang.org/download/0.16.0/release-notes.html#Target-Support)
+which he has taken responsibility for keeping up to date.
+
+Furthermore, he's been on top of the ever-growing
+[pull request queue](https://codeberg.org/ziglang/zig/pulls), tirelessly helping contributors get
+their changes landed. These kind of review efforts are challenging to do
+consistently, but they are the lifeblood of the project.
+
+Alex is also currently the only Zig project maintainer other than me who has
+the patience and stamina to prepare the [LLVM](https://llvm.org/) release
+upgrade branches. Every major version bump of LLVM is a source of untold misery
+and grief as we are reminded just how load bearing Zig is when it comes to
+LLVM's test coverage.
+
+Alex's collaborative nature doesn't stop at the Zig project. In the last 18
+months he has landed
+[20 commits in LLVM](https://github.com/llvm/llvm-project/commits?author=alexrp) as well as making
+[62 high quality, actionable bug reports](https://github.com/llvm/llvm-project/issues?q=is%3Aissue%20author%3Aalexrp), with 10 still open!
+He doesn't just complain when a third party project has an issue. He goes and
+[strikes up a friendly conversation](https://marc.info/?l=openbsd-bugs&m=177160273917114) and
+gets to the bottom of it. As a final example in this category, Alex has 11 bug fixes landed in
+[musl libc](https://musl.libc.org/).
+
+Alex loves building a diverse computer collection. He has taken upon himself to
+increase the different kinds of CPUs and OSs that Zig's test suite runs on. As
+of today, the CI runs debug and release variants of each of these targets:
+
+```=html
+<img src="https://ziglang.org/news/core-team-spotlight-alexrp/alexrp-desk-1.jpg" alt="Photograph of computers underneath Alex's desk" style="float: right; padding: 1em; width: 30em">
+```
+
+* aarch64-freebsd
+* aarch64-linux
+* aarch64-netbsd
+* aarch64-macos
+* loongarch64-linux
+* powerpc64le-linux
+* riscv64-linux
+* s390x-linux
+* x86_64-freebsd
+* x86_64-linux
+* x86_64-netbsd
+* x86_64-openbsd
+* x86_64-windows
+
+A good chunk of those are physically sitting underneath Alex's desk!
+
+Alex, thank you so much for being who you are and for offering your time,
+expertise, and power outlets to the Zig project. It is truly an honor to call
+myself your colleague.
