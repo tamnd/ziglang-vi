@@ -1,0 +1,84 @@
+---
+.title = "Zig Software Foundation",
+.author = "",
+.date = @date("2024-08-07:00:00:00"),
+.layout = "page.shtml",
+.custom = {
+	"mobile_menu_title": "ZSF",
+},
+---
+# Tài trợ Zig Software Foundation
+
+Hãy cân nhắc quyên góp định kỳ. Duy trì và hỗ trợ phần mềm chất lượng cao đòi hỏi nhân lực liên tục!
+
+```=html
+<div id="zsf-every-donate-btn">
+  <script async defer src="https://embeds.every.org/0.4/button.js?explicit=1" id="every-donate-btn-js"></script>
+  <a href="https://www.every.org/zig-software-foundation-inc?utm_campaign=zsf_homepage#/donate">Donate</a>
+  <script>
+    function zsfCreateWidget() {
+      everyDotOrgDonateButton.createButton({
+        selector: "#zsf-every-donate-btn",
+        nonprofitSlug: "zig-software-foundation-inc",
+        fontSize: "32px",
+        label: "Sponsor"
+      });
+      everyDotOrgDonateButton.createWidget({
+        selector: "#zsf-every-donate-btn",
+        nonprofitSlug: "zig-software-foundation-inc",
+        defaultDonationAmount: 10,
+        defaultFrequency: 'monthly'
+      });
+    }
+    if (window.everyDotOrgDonateButton) {
+      zsfCreateWidget();
+    } else {
+      document.getElementById("every-donate-btn-js").addEventListener('load', zsfCreateWidget);
+    }
+  </script>
+</div>
+```
+
+
+# Sứ mệnh
+Sứ mệnh của Zig Software Foundation là quảng bá, bảo vệ và phát triển ngôn ngữ lập trình Zig, hỗ trợ và tạo điều kiện cho một cộng đồng lập trình viên Zig đa dạng và quốc tế lớn mạnh, và cung cấp giáo dục, định hướng cho sinh viên, đào tạo thế hệ lập trình viên tiếp theo trở nên có năng lực, có đạo đức, và giữ nhau ở chuẩn cao.
+
+**ZSF là tổ chức phi lợi nhuận 501(c)(3).** Tài chính, biên bản họp và các chi tiết khác [được công khai](https://drive.google.com/drive/folders/1ucHARxVbhrBbuZDbhrGHYDTsYAs8_bMH?usp=sharing).
+
+# Ban điều hành
+
+- [Andrew Kelley](https://andrewkelley.me/) (Chủ tịch)
+- Josh Wolfe (Thư ký)
+- [Mason Remaley](https://www.masonremaley.com/) (Thủ quỹ)
+
+# Tài trợ
+
+Khi quyên góp cho ZSF, bạn đang tài trợ cho quá trình phát triển ngôn ngữ lập trình Zig và hệ sinh thái của nó, qua đó mang lợi cho cả cộng đồng nguồn mở. Các thành viên cộng đồng Zig đã đóng góp bản vá cho [LLVM](https://llvm.org/), [Wine](https://winehq.org/), [QEMU](https://qemu.org/), [musl libc](https://musl.libc.org/), [GDB](https://www.gnu.org/software/gdb/) và nhiều dự án khác.
+
+ZSF là tổ chức nhỏ và dùng nguồn lực tiền bạc hiệu quả. Kế hoạch là giữ mọi thứ gọn nhẹ, nhưng chúng tôi muốn biến tình nguyện viên chưa được trả lương thành người duy trì có lương, để giúp merge pull request và tiến nhanh hơn tới bản 1.0. Toàn bộ lý do ZSF là phi lợi nhuận là để mang lợi cho con người. Chúng tôi đang cố gắng để những người duy trì nguồn mở được trả công cho thời gian của họ.
+
+# Thông tin quyên góp
+Hãy kiểm tra luật địa phương để biết liệu bạn có được khấu trừ thuế khi quyên góp hay không.
+
+## EIN
+84-5105214
+
+## Địa chỉ
+Zig Software Foundation
+1632 1st Ave #21385
+New York, NY 10028
+
+## Các phương thức quyên góp khác
+- [Every](https://www.every.org/zig-software-foundation-inc/)
+- [Benevity](https://benevity.com) (khuyến nghị nếu công ty của bạn khớp quỹ quyên góp!)
+- Chuyển khoản ngân hàng (kể cả từ ngoài Mỹ, liên hệ chúng tôi để biết thêm)
+- Séc giấy (xem địa chỉ phía trên)
+- [Wise](https://wise.com)
+
+**Đừng ngần ngại liên hệ donations@ziglang.org nếu có câu hỏi hay nhu cầu riêng.**
+
+# Nhà tài trợ doanh nghiệp
+
+## Quyên góp tiền
+Các công ty dưới đây đang hỗ trợ trực tiếp về tài chính cho Zig Software Foundation với mức trên $1000/tháng.
+[]($code.language('=html').siteAsset('corporate-sponsors.html'))

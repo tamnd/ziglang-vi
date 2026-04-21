@@ -1,0 +1,102 @@
+---
+.title = "Quy tắc ứng xử",
+.author = "",
+.date = @date("2025-11-22:00:00:00"),
+.layout = "page.shtml",
+.custom = {
+	"mobile_menu_title": "Quy tắc ứng xử",
+},
+---
+
+Cộng đồng Zig phi tập trung. Ai cũng có thể tự mở và duy trì một
+[cộng đồng](/community) riêng, và cộng đồng đó không chịu các quy tắc
+trong tài liệu này.
+
+**Tài liệu này chỉ áp dụng cho các không gian sau:**
+
+* Tổ chức ziglang trên Codeberg
+* Kênh IRC #zig trên Libera.chat
+* Chat Zulip dành cho phát triển dự án Zig
+
+Các quy tắc ở đây rất nghiêm. Không gian này chỉ dành cho công việc
+kỹ thuật tập trung, đúng chủ đề, về dự án Zig. Mọi người đều có trách
+nhiệm duy trì một môi trường tích cực, nhất là khi có bất đồng.
+
+## [Không dùng LLM / Không dùng AI]($section.id('strict-no-llm-no-ai-policy'))
+
+Không LLM cho issue.
+
+Không LLM cho pull request.
+
+Không LLM cho comment trên bug tracker, kể cả để dịch. Khuyến khích
+tiếng Anh, nhưng không bắt buộc. Bạn có thể viết bằng tiếng mẹ đẻ, và
+để người khác dùng công cụ dịch của họ mà hiểu.
+
+[Profession của Isaac Asimov](https://web.archive.org/web/20201109034130/https://www.abelard.org/asimov.php)
+
+## [Vui lòng không mở proposal đổi ngôn ngữ]($section.id('no-language-proposals'))
+
+Cảm ơn bạn đã quan tâm đến việc cải thiện Zig. Tuy nhiên, chúng tôi
+không quan tâm đến đề xuất kiểu "ném xong là đi".
+
+Nếu bạn muốn đề xuất thay đổi ngôn ngữ, bạn phải thuyết phục một thành
+viên Zig core team nộp thay và đứng ra bảo trợ cho đề xuất đó. Một số
+là contractor được trả lương, một số là tình nguyện viên, và họ đều tự
+quyết cách dùng thời gian. Thành viên core team có thể sẵn sàng bảo trợ
+proposal, có thể không, đó là quyết định của họ. Vui lòng không quấy rối
+thành viên Zig core team.
+
+## [Chỉ cư xử an toàn, xây dựng]($section.id('safe-constructive-only'))
+
+Ví dụ về hành vi góp phần tạo môi trường tích cực:
+
+ * Dùng từ ngữ chào đón và bao dung.
+ * Tôn trọng quan điểm và trải nghiệm khác nhau.
+ * Chấp nhận phê bình xây dựng một cách nhã nhặn.
+ * Giúp người khác đạt mục tiêu của họ.
+ * Thể hiện sự cảm thông.
+ * Biết trân trọng công sức của người khác.
+ * Công nhận trải nghiệm, kỹ năng, góc nhìn và nhu cầu của người khác.
+
+Ví dụ về hành vi không chấp nhận được:
+
+ * Chú ý hay tán tỉnh không được đón nhận, hoặc dùng ngôn từ/hình ảnh
+   có tính chất tình dục gây khó chịu.
+ * Trolling, chế nhạo hay hạ thấp, công kích cá nhân. Mọi hành vi đối
+   địch với người khác.
+ * Thảo luận lạc đề dưới mọi hình thức — đặc biệt là các chủ đề xúc
+   phạm hay nhạy cảm.
+ * Công bố thông tin cá nhân của người khác, ví dụ địa chỉ nhà hay địa
+   chỉ điện tử, mà chưa được phép rõ ràng.
+ * Thảo luận về Quy tắc ứng xử này hay công khai tố cáo ai đó vi phạm nó.
+ * Làm người khác thấy mình là kẻ ngoài cuộc, hoặc ám chỉ họ thiếu khả
+   năng kỹ thuật.
+ * Hành vi phá hoại. Bất cứ việc gì làm hại Zig hay dự án nguồn mở khác.
+
+## [Thực thi]($section.id('enforcement'))
+
+Nếu cần báo cáo vấn đề, bạn có thể liên hệ Andrew Kelley hoặc Loris Cro,
+cả hai đều nhận lương từ Zig Software Foundation, và việc điều hành
+không gian này là một phần công việc của họ. Chúng tôi sẽ nhanh chóng
+loại bỏ bất cứ ai công kích người khác hoặc có hành vi phá hoại.
+
+Bao gồm cả quấy rối riêng. Nếu người A bị người B quấy rối hoặc công
+kích trực tiếp, người B sẽ bị cấm tham gia không gian này, kể cả khi
+hành vi quấy rối không xảy ra trên các kênh thuộc phạm vi Quy tắc ứng
+xử này.
+
+Như đã nói, không được thảo luận Quy tắc ứng xử này trên Codeberg, IRC
+hay Zulip, vì các nơi đó dành cho công việc trên mã, không phải cho
+thảo luận meta. Nếu bạn có vấn đề với nó, có thể liên hệ tôi trực tiếp,
+hoặc tham gia một cộng đồng khác có luật khác.
+
+ * Andrew Kelley <andrew@ziglang.org>
+ * Loris Cro <loris@ziglang.org>
+
+## [Kết]($section.id('conclusion'))
+
+Cảm ơn đã đọc. Cùng nhau, ta có thể làm không gian này chào đón và bao
+dung với mọi người, bất kể tuổi tác, vóc dáng, khuyết tật, sắc tộc, đặc
+điểm giới tính, bản dạng và biểu hiện giới, mức độ kinh nghiệm, học vấn,
+hoàn cảnh kinh tế xã hội, quốc tịch, ngoại hình, chủng tộc, tôn giáo, hay
+bản dạng và xu hướng tính dục.

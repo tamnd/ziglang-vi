@@ -1,0 +1,249 @@
+---
+.title = "Cộng đồng",
+.author = "",
+.date = @date("2025-11-22:00:00:00"),
+.layout = "page.shtml",
+.custom = {
+	"mobile_menu_title": "Cộng đồng",
+},
+---
+
+Cộng đồng Zig phi tập trung. Ai cũng có thể tự mở và duy trì một không
+gian riêng để mọi người tụ họp, rồi gửi pull request để thêm liên kết vào
+trang này.
+
+Không có khái niệm "chính thức" hay "không chính thức". Mỗi nơi có
+người điều hành và luật chơi riêng.
+
+Khi thêm một cộng đồng mới, vui lòng thêm vào cuối danh sách hiện có
+như một phép lịch sự.
+
+Xem mục Compiler Development (gần cuối trang) để biết các cộng đồng
+dành cho việc phát triển chính trình biên dịch Zig.
+
+Do hạn chế thời gian, Zig Core Team giữ quyền tùy ý chỉnh sửa trang này
+theo ý kiến chủ quan, và cũng có thể bỏ quên trang này trong thời gian dài.
+
+# Thảo luận chung
+## IRC
+ * `#zig` trên irc.libera.chat
+   - Điều hành:
+     - [Andrew Kelley](https://andrewkelley.me/)
+     - [Isaac Freund](https://isaacfreund.com/)
+   - [Code of Conduct](/code-of-conduct)
+
+## Discord (tiếng Anh)
+ * [Zig Programming Language Discord](https://discord.gg/zig)
+   - Điều hành: [Felix Queißner](https://github.com/MasterQ32), [InKryption](https://github.com/InKryption), [Loris Cro](https://github.com/kristoff-it), [Agni](https://github.com/sin-ack), [Lee Cannon](https://github.com/leecannon), [Robin Voetter](https://github.com/Snektron), [Matt Knight](https://github.com/mattnite)
+   - Quy tắc:
+     - Xem kênh #info khi mới vào
+     - Tuân thủ [Discord's Community Guidelines](https://discord.com/guidelines)
+ * [Zig Embedded Group](https://discord.gg/bbVRwX4KEf)
+   - Điều hành: [mattnite](https://github.com/mattnite), [MasterQ32](https://github.com/MasterQ32)
+   - Quy tắc:
+     - Lịch sự và tôn trọng,
+     - Tuân thủ [Discord's Community Guidelines](https://discord.com/guidelines)
+ * [cod1r's Zig discord](https://discord.gg/yEBzfgHrNF)
+   - Điều hành: [cod1r](https://github.com/cod1r), [haze](https://github.com/haze)
+   - Quy tắc:
+     - Lịch sự và tôn trọng
+     - Tuân thủ [Discord's Community Guidelines](https://discord.com/guidelines)
+
+
+## Discord (quốc tế)
+ * [Zig-JP(Japanese)](https://discord.gg/brNYwrtncu)
+   - Điều hành: [aiotter](https://github.com/aiotter)
+   - Quy tắc: theo [Zig Programming Language Discord](https://discord.gg/gxsFFjE)
+
+ * [Zig-KR(Korean)](https://discord.zig-kr.org)
+   - Điều hành: [Pribess](https://github.com/Pribess)
+   - Quy tắc: theo [Zig Programming Language Discord](https://discord.gg/gxsFFjE)
+
+ * [Zig-AR(عربي)](https://discord.com/invite/BguRbZrP)
+   - Điều hành: [Hasan Yousef](https://github.com/hajsf)
+   - Quy tắc: theo [Zig Programming Language Discord](https://discord.gg/gxsFFjE)
+
+* [Zig-CN(汉语)](https://discord.ziglang.org.cn)
+   - Điều hành: [liuchong](https://github.com/liuchong)
+   - Quy tắc: theo [Zig Programming Language Discord](https://discord.gg/gxsFFjE)
+
+* [Zig-DE(German)](https://discord.gg/G8HgRJaqbB)
+   - Điều hành: [Shadowdara](https://github.com/shadowdara)
+   - Quy tắc: theo [Zig Programming Language Discord](https://discord.gg/gxsFFjE)
+
+## Tencent QQ
+
+ * [Expert Zig(Chinese)](https://qm.qq.com/cgi-bin/qm/qr?k=Grsz9EpZRobM3P_K9Ch5e59N6xXQFYUB&authKey=DBD1qC54GFzwHo1B5aK/Ola6sgoQdxHBZWc5gHfhZ0LU6nEf/0d6cr6rnTpaOSrt&noverify=0): 930564004
+
+## Telegram
+
+ * [Zig Telegram (Español)](https://t.me/+TuqWR0w6W5o1MDAx)
+   - Chủ nhóm: [Samuel Bonilla](https://github.com/SamuelBonilla)
+ * [Zig 中文社区 (Chinese)](https://t.me/ZigChinese)
+   - Chủ nhóm: [LemonHX](https://github.com/lemonhx)
+ * [Zig Telegram (Russian-speaking)](https://t.me/ziglang_ru)
+   - Admin: [BratishkaErik](https://github.com/BratishkaErik)
+ * [Zig Telegram (Portuguese)](https://t.me/ziglang_br)
+   - Chủ nhóm: [Matheus C. França](https://github.com/kassane)
+ * [Zig Telegram (Persian)](https://t.me/zig_fa)
+   - Chủ nhóm: [Mahdi Sharifi](https://github.com/devraymondsh)
+ * [Zig Telegram (Uzbek)](https://t.me/ziglang_uz)
+   - Chủ nhóm: [yuri](https://github.com/katsuki-yuri)
+ * [Zig Telegram (عربي)](https://t.me/zig_Arabic)
+   - Chủ nhóm: [Hasan Yousef](https://github.com/hajsf)
+ * [Zig Telegram (Italian)](https://t.me/ziglang_it)
+   - Chủ nhóm: [kristoff](https://github.com/kristoff-it)
+ * [Zig India](https://t.me/zigindia)
+   - Chủ nhóm: [Tushar Sadhwani](https://t.me/tushar_lol)
+ * [Zig Lang Stickers](https://t.me/addstickers/Ziglang)
+ * [Zig Language Indonesia (Indonesian)](https://t.me/zigindonesia)
+   - Chủ nhóm: [Hadi Hidayat (Robi) Hammurabi](https://t.me/hadihammurabi)
+ * [Zig Telegram (Hebrew)](https://t.me/ziglang_il)
+   - Chủ nhóm: [Tal Z](https://github.com/tal2)
+
+## Matrix / Element
+
+ * [#zig:tchncs.de](https://matrix.to/#/#zig:tchncs.de)
+    - Điều hành: [Josias](https://github.com/justjosias), [Simon A. Nielsen Knights](https://github.com/tauoverpi)
+    - Quy tắc: giống IRC
+ * [#bayareazig:matrix.org](https://matrix.to/#/#bayareazig:matrix.org)
+    - Điều hành: [Salar Rahmanian](https://github.com/softinio)
+    - Quy tắc: giống IRC
+
+## Zulip
+
+ * [zig-lang](https://zig-lang.zulipchat.com/join/fbhff4nwoyop6j5fpbu3yqfx/)
+    - Admin: Aria Elfren (Zulip username)
+    - Quy tắc: giống IRC (tạm thời)
+
+
+## Stoat
+
+ * [Zig Programming Language](https://old.stoat.chat/invite/zM0bnVNJ)
+   - Điều hành: [Ali Cheraghi](https://github.com/alichraghi)
+
+## Slack
+ * [ziglang.slack.com](https://join.slack.com/t/ziglang/shared_invite/zt-2t5c84dtz-VLkkveTO_tcejLnliesHmg)
+   - Điều hành: [Loong](mailto:longxianwen@outlook.com)
+   - Quy tắc: giống IRC
+ * [Zig programming language](https://join.slack.com/t/zigprogramming/shared_invite/zt-1zqm0mmu9-66~IkF3Bnw5HjVOOEhWIag)
+   - Điều hành: [Annie Herrmann](mailto:mail@anniiii.xyz)
+   - Quy tắc: giống IRC
+
+## WhatsApp
+ * [Zig Nigeria](https://chat.whatsapp.com/Cv6PA8uBoEB9BoxnDOpKQI)
+   - Điều hành: [Ayodeji Adeoti](mailto:adeoti.15.jude@gmail.com)
+   - Quy tắc: giống IRC
+ * [Zig lang Israel](https://chat.whatsapp.com/El49FFSVtPfCZoRmd4Ag4q)
+   - Quy tắc:
+     * Lịch sự.
+     * Đúng chủ đề.
+
+## Email List
+
+* [zig-brasil@googlegroups.com](https://groups.google.com/g/zig-brasil)
+  - Điều hành: [Matheus C. França](https://github.com/kassane)
+  - Quy tắc: giống IRC
+
+## Forums
+
+* [Ziggit](https://ziggit.dev)
+  - Điều hành:
+      - [@jecolon](https://github.com/jecolon)
+      - [Zach Raineri](https://github.com/zraineri)
+      - [@andrewCodeDev](https://github.com/andrewCodeDev)
+  - [Terms of Service](https://ziggit.dev/tos)
+  - [FAQ](https://ziggit.dev/faq)
+
+* [Zig 中文社区论坛](https://github.com/zigcc/forum/discussions)
+
+* [ZigQuestions](https://github.com/nektro/zigquestions)
+
+## Đồ lưu niệm
+
+ * [Teespring Store run by @wilsonk](https://teespring.com/stores/wilsons-store-12)
+   - Store ở trên có các mẫu Logos, Zero, Ziggy và Zigfast mới
+   - Mẫu cũ (https://teespring.com/stores/wilsons-store-5)
+   - Lợi nhuận dùng cho Zig (@andrewrk xác nhận điều này)
+
+## MAX
+ * [Zig (Russian)](https://max.ru/join/22ertAE9dW5hIelAlVta988HPkLHYJrodNV_KXif0uk)
+   - Chủ nhóm: [Nickolay Chistov](https://github.com/nchistov)
+
+## X (trước kia là Twitter)
+ * [Zig Programming Language](https://x.com/i/communities/1830711127354851778)
+   - Điều hành: [gdjohn4s](https://x.com/jontec8)
+   - Quy tắc: xem trên trang Community Profile
+
+## Reddit
+
+(Phần này do Andrew Kelley viết)
+
+Tôi từng làm mod cho subreddit /r/zig. Trong đợt biểu tình Reddit tháng
+6/2023, tôi quyết định đóng vĩnh viễn /r/zig, chuyển sang chế độ riêng tư,
+và khuyến khích mọi người sang ziggit.dev.
+
+Một kẻ phá rối đã nhắn cho admin Reddit và lấy được quyền moderator
+với /r/zig, mở lại sub, rồi phá phách một cách trẻ con trong vài tuần,
+trước khi chán và bỏ đi.
+
+Kế đến, [Jens Goldberg](https://github.com/Aransentin) nhắn admin Reddit
+và trở thành moderator của /r/zig. Anh ấy khá thoáng, không can thiệp
+nhiều, để hệ thống vote của Reddit xử lý tranh cãi.
+
+Khi subreddit bị đóng riêng tư, phần lớn người có giá trị đã chuyển sang
+các cộng đồng khác. Phần còn lại chủ yếu là những người tạp nham, sẵn
+sàng dung túng cho hành vi phá rối, và quan tâm đến Reddit nhiều hơn là
+quan tâm đến Zig.
+
+Giờ thì Zig subreddit là một bãi hoang, và cá nhân tôi khuyên không nên
+ghé. Thật ra tôi đã xóa luôn tài khoản Reddit của mình.
+
+Tôi không có thời gian hay năng lượng để đánh giá hầu hết các cộng đồng
+Zig, nên tôi không tán thành cũng không phản đối chúng. Nhưng Zig
+subreddit là ngoại lệ.
+
+Đó là một nơi tệ hại và tôi giữ quyết định đóng vĩnh viễn. Tôi không vui
+về việc nó bị mở lại trái với ý muốn của mình.
+
+# Streams
+
+## SHOWTIME
+
+Chương trình nơi các thành viên cộng đồng Zig chia sẻ mã nguồn và ý tưởng.
+
+https://zig.show/
+
+ * [YouTube](https://www.youtube.com/channel/UC2EQzAewrC10KCDFSS4j-zA)
+ * [Newsletter](https://zig.show/newsletter)
+ * [Apply to Speak](https://zig.show/speak)
+ * [Discord](https://discord.gg/B73sGxF)
+   Server Discord của Zig SHOWTIME dùng để tổ chức chương trình, và là nơi gặp gỡ cho những người quan tâm đến thành công của Zig, cùng nhau làm dự án mới. Mục tiêu chính là tạo một cộng đồng của những người sáng tạo (mã, bài viết, video, hay bất cứ gì khác), để mọi người tận dụng được nhiều nhất trải nghiệm Zig của mình. Không ai sinh ra đã biết Zig, nên ai cũng được chào đón để vui vẻ trong server này. Nhưng nếu bạn chưa chắc Zig có phải ngôn ngữ phù hợp không, nên ghé các cộng đồng Zig khác trước, vì những nơi đó tập trung hơn vào việc giúp người mới.
+
+## Cá nhân
+
+ * [Andrew Kelley](https://www.twitch.tv/andrewrok) - phát triển dự án Zig
+ * [Loris Cro](https://www.twitch.tv/kristoff_it) - Showtime, event-loop, linh tinh
+ * [Benjamin Feng](https://www.twitch.tv/fengb) - GameBoy emulator, web assembly, allocator
+ * [Meghan Denny](https://www.twitch.tv/nektro77) - trình quản lý gói Zigmod, web server, v.v.
+ * [KomariSpaghetti](https://www.twitch.tv/komarispaghetti)
+ * [daurnimator](https://www.twitch.tv/daurnimator)
+ * [Dan B](https://www.twitch.tv/danbokser) - OS tự viết bằng Zig và app cho nó
+ * [Spex_Guy](https://www.twitch.tv/spex_guy)
+ * [Dr_Deano](https://www.twitch.tv/dr_deano) - kernel tự viết bằng Zig
+ * [Isaac Freund](https://www.twitch.tv/ifreund_) - River, Wayland compositor viết bằng Zig
+ * [Auguste Rame](https://www.twitch.tv/SuperAuguste) - Zig + Java (JNI, JVM bằng Zig), dự án Zig linh tinh, meme Zig, v.v. - [Video lưu trữ](https://www.youtube.com/channel/UC8JUunJCTUo0icqJzUfbT2A), [Video khuyến nghị](https://www.youtube.com/watch?v=6Zw6llGGRwA)
+ * [sphaerophoria](https://www.twitch.tv/sphaerophoria) - nhiều dự án bằng Zig và Rust - [Video lưu trữ](https://www.youtube.com/@sphaerophoria/videos)
+ * [Salar Rahmanian](https://www.twitch.tv/softinio) - stream liên quan đến Zig, bao gồm sự kiện online của Bay Area Zig User Group
+
+# Compiler Development
+Các cộng đồng dưới đây tập trung vào phát triển trình biên dịch Zig.
+
+Lưu ý: nếu bạn mới học Zig, hãy sang các cộng đồng thảo luận chung có
+khu vực dành cho người mới.
+
+## Zulip
+ * [ZSF Compiler Development](https://zsf.zulipchat.com/)
+   - Điều hành:
+     - [Andrew Kelley](https://andrewkelley.me/)
+   - [Code of Conduct](/code-of-conduct)

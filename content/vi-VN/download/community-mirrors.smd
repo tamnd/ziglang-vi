@@ -1,0 +1,113 @@
+---
+.title = "Community Mirrors",
+.author = "",
+.date = @date("2024-08-07:00:00:00"),
+.layout = "download/community-mirrors.shtml",
+.alternatives = [{
+    .name = "list",
+    .layout = "download/community-mirrors-list.shtml",
+    .output = "/download/community-mirrors.txt",
+}],
+.custom = { "mobile_menu_title": "Mirrors" },
+---
+
+Nếu bạn đang dựng thứ gì đó tự tải Zig, ví dụ CI, bạn có thể quan tâm đến việc dùng community mirror thay vì tải trực tiếp từ
+ziglang.org.
+
+Trang ziglang.org không có cam kết nào về uptime hay tốc độ, nghĩa là CI của bạn sẽ thỉnh thoảng fail hoặc chạy chậm nếu hardcode URL tải
+ở đây. Thực tế, việc cấu hình CI fetch trực tiếp từ ziglang.org còn góp phần làm giảm uptime và tốc độ, vì site này [được host cố tình
+trên cấu hình máy đơn giản](/news/migrate-to-self-hosting). Thường thì nên fetch Zig từ một trong nhiều mirror do cộng đồng duy trì.
+Các mirror này không được Zig Software Foundation chứng thực chính thức, nhưng có thể dùng an toàn nhờ việc chúng tôi ký các
+archive. Tuy không mirror riêng lẻ nào cam kết uptime hay tốc độ, cấu hình automation để luân phiên qua danh sách mirror có thể
+đảm bảo uptime cao trên thực tế.
+
+> # [Lưu ý bảo mật]($block)
+> Community mirror không được Zig Software Foundation tin cậy hoặc chứng thực chính thức, và về mặt lý thuyết có thể phân phối binary độc hại. Nếu bạn dùng chúng,
+> bạn **phải** xác thực chữ ký minisign cho mọi tarball tải về so với public key của ZSF, có sẵn ở [trang download](/download).
+
+## Forgejo Actions
+
+Nếu bạn đang dựng automation với Forgejo Actions, bạn có thể quan tâm đến
+Action [mlugg/setup-zig](https://codeberg.org/mlugg/setup-zig) (lưu ý đây không phải dự án chính thức của ZSF). Action này không chỉ cài đặt
+Zig ở phiên bản bạn chọn từ community mirror, mà còn lưu cache directory của Zig qua các workflow run, giúp rebuild nhanh hơn.
+
+## GitHub Actions
+
+Nếu bạn đang dựng automation với GitHub Actions, bạn có thể quan tâm đến
+Action [mlugg/setup-zig](https://github.com/marketplace/actions/setup-zig-compiler) (lưu ý đây không phải dự án chính thức của ZSF). Action này không chỉ cài đặt
+Zig ở phiên bản bạn chọn từ community mirror, mà còn lưu cache directory của Zig qua các workflow run, giúp rebuild nhanh hơn.
+
+## Dùng Mirror
+
+Danh sách community mirror có ở dạng file ASCII, mỗi mirror một dòng, tại https://ziglang.org/download/community-mirrors.txt. Khuyến nghị để tool
+fetch danh sách này và thử các mirror theo thứ tự ngẫu nhiên (để tránh dồn tải lên một mirror, vì điều đó làm mọi người dùng nó đều chậm đi).
+
+Mọi tarball Zig đều đi kèm file chữ ký [minisign](https://jedisct1.github.io/minisign/), cũng có thể tải từ mirror. **Khi
+tải tarball từ mirror, bạn phải tải cả file chữ ký đi kèm và xác thực tarball với chữ ký đó.** Bỏ qua bước kiểm tra chữ ký
+về mặt lý thuyết có thể khiến bạn bị tấn công bởi mirror độc hại phân phối tarball đã bị sửa.
+
+Nói ngắn gọn, chiến lược khuyến nghị đại khái như pseudocode sau:
+
+```python
+pubkey = "(copy từ https://ziglang.org/download)"
+tarball_name = "zig-x86_64-linux-0.14.1.tar.xz"
+# Để cải thiện uptime, có thể cache GET này:
+mirrors = http_get("https://ziglang.org/download/community-mirrors.txt")
+# ASCII, mỗi mirror một dòng, newline là LF, có newline cuối file.
+shuffled = shuffle_lines(mirrors)
+for mirror_url in shuffled:
+    tarball = http_get(f"{mirror_url}/{tarball_name}?source=my_automation_name")
+    if not success:
+        continue # tải tarball fail
+
+    # KHÔNG BAO GIỜ BỎ QUA CÁC BƯỚC SAU. Chữ ký phải được xác thực trước khi coi tarball là an toàn.
+    signature = http_get(f"{mirror_url}/{tarball_name}.minisig?source=my_automation_name")
+    if not success:
+        continue # tải file chữ ký fail
+
+    if not minisign_verify(tarball, signature, pubkey):
+        continue # xác thực file chữ ký fail
+
+    # File chữ ký do ZSF cung cấp có trường "file" trong trusted comment
+    # cho biết chữ ký này dành cho tarball nào.
+    # Phải xác thực nó khớp với tên tarball yêu cầu để chặn downgrade attack.
+    actual_tarball_name = minisign_signature_parse_filename(signature)
+    if actual_tarball_name != tarball_name:
+        continue # tarball sai
+
+    print("Đã tải Zig 0.14.1 thành công!")
+    break
+```
+
+Vì ziglang.org không cam kết uptime, file `community-mirrors.txt` có lúc có thể không truy cập được. Do đó bạn có thể
+cân nhắc cache nội dung của nó để tránh gián đoạn khi ziglang.org down. Khoảng thời gian refetch khuyến nghị là
+khoảng mỗi ngày một lần. Thời điểm hiện tại, mirror có thể được thêm hoặc gỡ theo chu kỳ hàng tháng khi hệ sinh thái phát triển, nên fetch lại định kỳ là điều bắt buộc.
+
+Viết cụ thể hơn, đây là thông tin chính và quy trình khuyến nghị để tải tarball Zig:
+
+* File danh sách mirror có ở https://ziglang.org/download/community-mirrors.txt.
+  * Vì ziglang.org không cam kết uptime, có thể nên cache file này.
+* File danh sách mirror chứa URL mirror dạng ASCII, ngăn cách bằng ký tự newline (ASCII LF 0x20). Có newline cuối. Không có whitespace khác. Không có dòng trống.
+* Mirror bắt buộc hỗ trợ HTTPS. Mỗi dòng trong file danh sách mirror bắt đầu bằng "https://".
+* Mirror không cam kết uptime, nên nếu một mirror fail khi phục vụ tarball, bạn nên thử mirror khác. Lý tưởng là shuffle danh sách và thử từng mirror.
+  * Thông thường mirror đầu tiên sẽ chạy được. Nếu không mirror nào chạy, bạn có thể thử `ziglang.org` làm phương án cuối.
+* Để tải tarball từ mirror, GET tới "mirror/filename", trong đó "mirror" là URL mirror, "filename" là basename của tarball tương ứng trên ziglang.org (ví dụ `zig-x86_64-linux-0.14.1.tar.xz`).
+  * Rất khuyến khích đưa vào request một query parameter tên `source` với chuỗi cho biết cái gì đang gửi request. Ví dụ Forgejo/GitHub Action `mlugg/setup-zig` truyền `?source=github-mlugg-setup-zig`.
+  * Source tarball, bootstrap tarball, và binary tarball đều có trên mọi mirror trong danh sách, kèm chữ ký minisign cho tất cả các file đó.
+  * Binary tarball cho các bản Zig gần đây có dạng `zig-x86_64-linux-0.14.1.tar.xz`.
+  * Nếu mirror trả về HTTP status khác 200 OK:
+    * `503 Unavailable` có thể là downtime có kế hoạch.
+    * `429 Too Many Requests` có thể là rate-limit chủ ý.
+    * `404 Not Found` là phản hồi được phép khi yêu cầu bản Zig 0.5.0 trở về trước, hoặc các bản development của Zig cũ hơn bản release mới nhất.
+    * `504 Gateway Timeout` nghĩa là tarball không có vì `https://ziglang.org/` hiện không truy cập được (và tarball không có trong cache của mirror).
+    * Các trường hợp khác, vui lòng [mở issue](https://codeberg.org/ziglang/ziglang.org/issues/new) để báo cho chúng tôi.
+* Sau khi tải tarball, các bước xác thực sau là bắt buộc: **(không được bỏ qua)**
+  * Mỗi lần tải tarball, **bắt buộc** cũng phải tải file chữ ký minisign (thêm đuôi ".minisig" vào tên file) và xác thực với public key của ZSF (copy từ trang ziglang.org/download).
+  * Để chặn downgrade attack, trong [trusted comment](https://jedisct1.github.io/minisign/#:~:text=Trusted%20comments) có trường "file" cần được xác thực khớp với tên tarball yêu cầu. Reference implementation `minisign` sẽ xác thực trusted comment nhưng **không** tự check trường "file", nên bước này phải tự làm tay.
+  * Nếu mirror trả `200 OK` nhưng xác thực chữ ký fail cho tarball trả về, vui lòng [mở issue](https://codeberg.org/ziglang/ziglang.org/issues/new) để báo cho chúng tôi.
+
+## Tự host một Mirror
+
+Nếu bạn muốn host một mirror, vui lòng xem [tài liệu trong repo
+ziglang.org](https://codeberg.org/ziglang/ziglang.org/src/branch/main/MIRRORS.md). Cảm ơn bạn đã giúp
+cải thiện và phi tập trung hóa hệ sinh thái Zig!
