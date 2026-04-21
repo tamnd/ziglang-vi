@@ -38,7 +38,13 @@ pub fn build(b: *std.Build) void {
     const doctest_exe = doctest_dep.artifact("doctest");
     const docgen_exe = doctest_dep.artifact("docgen");
 
-    installReleaseNotes(b, doctest_exe, docgen_exe);
+    const skip_release_notes = b.option(
+        bool,
+        "skip-release-notes",
+        "Skip generating release notes (useful when hosting translated content only, or when upstream doctests are flaky)",
+    ) orelse false;
+
+    if (!skip_release_notes) installReleaseNotes(b, doctest_exe, docgen_exe);
 
     for (releases) |release| {
         const input_wf = b.addWriteFiles();

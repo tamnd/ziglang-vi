@@ -16,7 +16,7 @@ ziglang.org.
 
 Trang ziglang.org không có cam kết nào về uptime hay tốc độ, nghĩa là CI của bạn sẽ thỉnh thoảng fail hoặc chạy chậm nếu hardcode URL tải
 ở đây. Thực tế, việc cấu hình CI fetch trực tiếp từ ziglang.org còn góp phần làm giảm uptime và tốc độ, vì site này [được host cố tình
-trên cấu hình máy đơn giản](/news/migrate-to-self-hosting). Thường thì nên fetch Zig từ một trong nhiều mirror do cộng đồng duy trì.
+trên cấu hình máy đơn giản](https://ziglang.org/news/migrate-to-self-hosting). Thường thì nên fetch Zig từ một trong nhiều mirror do cộng đồng duy trì.
 Các mirror này không được Zig Software Foundation chứng thực chính thức, nhưng có thể dùng an toàn nhờ việc chúng tôi ký các
 archive. Tuy không mirror riêng lẻ nào cam kết uptime hay tốc độ, cấu hình automation để luân phiên qua danh sách mirror có thể
 đảm bảo uptime cao trên thực tế.
