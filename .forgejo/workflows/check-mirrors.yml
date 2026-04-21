@@ -1,0 +1,44 @@
+name: check mirrors
+
+on:
+  schedule:
+    - cron: "0 22 * * *"
+  pull_request:
+    paths:
+      - "assets/community-mirrors.ziggy"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    timeout-minutes: 60
+
+    runs-on:
+      - self-hosted
+      - x86_64-linux
+
+    steps:
+      - name: Checkout
+        uses: https://codeberg.org/ziglang/checkout@19af6bac491e2534a4687a50ee84fa7f13258d28
+
+      - name: Check mirrors
+        id: check
+        run: $HOME/deps/zig-x86_64-linux-0.16.0/zig build --build-file check-mirrors/build.zig run -- assets/community-mirrors.ziggy mirror-summary.md
+
+      - name: Send notification
+        if: ${{ always() && github.event_name != 'pull_request' && (steps.check.outcome == 'failure' || steps.check.outcome == 'timed_out') }}
+        run: |
+          curl -s -S \
+            -F user="${{ secrets.MIRROR_CHECK_PUSHOVER_USER }}" \
+            -F token="${{ secrets.MIRROR_CHECK_PUSHOVER_TOKEN }}" \
+            -F message="Zig download mirror validation failed" \
+            https://api.pushover.net/1/messages.json
+
+      - name: Upload summary table
+        if: ${{ always() }}
+        uses: https://code.forgejo.org/forgejo/upload-artifact@16871d9e8cfcf27ff31822cac382bbb5450f1e1e
+        with:
+          name: mirror-summary.md
+          path: mirror-summary.md

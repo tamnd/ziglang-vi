@@ -1,0 +1,66 @@
+<extend template="locale.shtml">
+<title id="title" :text="$page.title"></title>
+<head id="head">
+  <link
+  type="text/css"
+  rel="stylesheet"
+  href="$site.asset('css/home.css').link()"
+>
+</head>
+<div id="content">
+  <div class="container">
+    <ctx back="$page.parentSection()">
+      <a id="back" href="$ctx.back.link()">
+        <ctx :text="$i18n.get('back')"></ctx>
+        <b :text="$ctx.back.title"></b>
+      </a>
+    </ctx>
+    <ctx :html="$page.contentSection('learn')"></ctx>
+    <ctx data="$site.asset('download/index.json').ziggy()">
+      <h2 :text="$i18n.get('documentation')"></h2>
+      <ctx :if="$ctx.data.get?('master')">
+        <h3>
+          <ctx :text="$i18n.get('version_unstable')"></ctx>
+          (master)
+        </h3>
+        <p>
+          <ul>
+            <li>
+              <a href="$if.get('docs')">
+                <ctx :text="$i18n.get('language_reference')"></ctx>
+              </a>
+            </li>
+            <li>
+              <a href="$if.get('stdDocs')">
+                <ctx :text="$i18n.get('std_docs')"></ctx>
+              </a>
+            </li>
+          </ul>
+        </p>
+      </ctx>
+      <ctx :loop="$ctx.data.iterPattern('.')">
+        <ctx :if="$loop.first">
+          <h3>
+            <ctx :text="$i18n.get('version_latest_stable')"></ctx>
+            (<ctx :text="$loop.it.key"></ctx>)
+          </h3>
+          <p>
+            <ul>
+              <li>
+                <a href="$loop.it.value.get('docs')">
+                  <ctx :text="$i18n.get('language_reference')"></ctx>
+                </a>
+              </li>
+              <li>
+                <a href="$loop.it.value.get('stdDocs')">
+                  <ctx :text="$i18n.get('std_docs')"></ctx>
+                </a>
+              </li>
+            </ul>
+          </p>
+        </ctx>
+      </ctx>
+    </ctx>
+    <ctx :html="$page.contentSection('guides')"></ctx>
+  </div>
+</div>

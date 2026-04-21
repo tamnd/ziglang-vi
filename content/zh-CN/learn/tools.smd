@@ -1,0 +1,41 @@
+---
+.title = "工具",
+.author = "",
+.date = @date("2024-08-07:00:00:00"),
+.layout = "page.shtml",
+.custom = {
+	"mobile_menu_title": "工具",
+	"toc": true,
+},
+---
+
+# [语言服务器]($heading.id('lsp'))
+语言服务器是与编辑器无关的工具，用于获取语法突出显示，自动完成和许多其他功能。推荐在语法高亮扩展的基础上使用语言服务器以获得更丰富的开发体验。
+
+- [zigtools/zls](https://github.com/zigtools/zls)
+
+# [文本编辑器]($heading.id('editors'))
+特定于编辑器的工具，主要是语法高亮显示工具。
+
+## VS Code
+- [ziglang/vscode-zig](https://codeberg.org/ziglang/vscode-zig)
+
+## Visual Studio
+- [ZigVS](https://marketplace.visualstudio.com/items?itemName=LuckystarStudio.ZigVS)
+
+## Sublime Text
+- [ziglang/sublime-zig-language](https://codeberg.org/ziglang/sublime-zig-language)
+
+## Vim
+- [ziglang/zig.vim](https://codeberg.org/ziglang/zig.vim)
+
+## Emacs
+- [ziglang/zig-mode](https://codeberg.org/ziglang/zig-mode)
+
+## Kate
+- [ziglang/kde-syntax-highlighting](https://codeberg.org/ziglang/kde-syntax-highlighting)
+
+## JetBrains family (IntelliJ IDEA, Fleet)
+- [ZigBrains](https://plugins.jetbrains.com/plugin/22456-zigbrains)
+- [Zig Fleet Plugin](https://plugins.jetbrains.com/plugin/26070-zig)
+

@@ -1,0 +1,20 @@
+.{
+    // TODO since this project is not intended for consumption as a package,
+    // delete these four fields.
+    .name = .ziglang_org,
+    .version = "0.0.0",
+    .fingerprint = 0xcfa933f86ca0a1dd,
+    .paths = .{""},
+
+    .minimum_zig_version = "0.16.0",
+    .dependencies = .{
+        .doctest = .{
+            .url = "git+https://codeberg.org/ziglang/docgen#64413e0803e7d6d701d3267552e75eb24f970298",
+            .hash = "doctest-0.1.0-lY-6k6u9AQD9MVSBl2iHnsd3JiwQ9-I01CmlML-OyJKW",
+        },
+        .zine = .{
+            .url = "git+https://github.com/kristoff-it/zine#61c51ed687fb69ef8f7941cc7cb95c8047556260",
+            .hash = "zine-0.11.2-ou6nIKJmLQGlOfdppfgnkRwLoWCnS7Gd0erT5y1tZ0S_",
+        },
+    },
+}

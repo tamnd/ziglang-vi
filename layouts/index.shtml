@@ -1,0 +1,133 @@
+<extend template="locale.shtml">
+<title id="title" :text="$page.title"></title>
+<head id="head">
+  <link
+    type="text/css"
+    rel="stylesheet"
+    href="$site.asset('css/home.css').link()"
+  >
+</head>
+<div id="content">
+  <div class="slogan alt-background">
+    <div class="container slogan-message">
+      <div
+        style="max-width:790px;margin:10px 0;padding:0 5px"
+        :html="$page.contentSection('slogan')"
+      >
+      </div>
+      <div class="cta-buttons">
+        <ctx :loop="$site.asset('download/index.json').ziggy().iterPattern('.')">
+          <ctx :if="$loop.first">
+            <a
+              href="$site.page('learn/getting-started').link()"
+              class="button main"
+              style="margin-bottom:5px"
+              :text="$i18n.get('get_started')"
+            ></a>
+            <span class="slogan-separator" style="font-size:.5em">
+              <ctx :text="$i18n.get('latest_release')"></ctx>
+               &nbsp;<span :text="$loop.it.key"></span>
+            </span>
+            <div style="display:flex;flex-direction:row;margin-top:5px">
+              <a
+                href="$loop.it.value.get('docs')"
+                class="button"
+                style="flex-grow:1;margin-top:0"
+                :text="$i18n.get('documentation')"
+              ></a>
+              <a
+                href="/download/0.16.0/release-notes.html"
+                class="button"
+                style="margin-left:5px;margin-top:0"
+                :text="$i18n.get('changes')"
+              ></a>
+            </div>
+          </ctx>
+        </ctx>
+      </div>
+    </div>
+  </div>
+  <div class="container" style="display:flex;flex-direction:row;flex-wrap:wrap;padding:30px 0 20px; justify-content:space-between;">
+    <div class="features">
+      <div :html="$page.contentSection('features')"></div>
+      <div style="display:flex;flex-direction:row;flex-wrap:wrap;justify-content:center">
+        <div>
+          <h1>
+            <a
+              href="learn/overview/"
+              class="button"
+              style="display:inline"
+              :text="$i18n.get('overview')"
+            ></a>
+          </h1>
+        </div>
+        <div style="margin-left:5px">
+          <h1>
+            <a
+              href="learn/samples/"
+              class="button"
+              style="display:inline"
+              :text="$i18n.get('code_samples')"
+            ></a>
+          </h1>
+        </div>
+      </div>
+    </div>
+    <div class="codesample" :html="$build.asset('index.zig').bytes()">
+    </div>
+  </div>
+  <div class="alt-background">
+    <div
+      class="container"
+      style="display:flex;flex-direction:column;justify-content:center;text-align:center;padding:20px 0"
+    >
+      <ctx :html="$page.contentSection('community')"></ctx>
+      <div class="container" style="display:flex;flex-direction:row;flex-wrap:wrap;justify-content:center">
+        <div style="width:25%">
+          <img
+            src="$site.asset('ziggy.svg').link()"
+            style="max-height:200px"
+          >
+        </div>
+        <div class="community-message">
+          <div :html="$page.contentSection('decentralized')"></div>
+          <div>
+            <h1>
+              <a
+                href="/community"
+                class="button"
+                style="display:inline"
+                :text="$i18n.get('all_communities')"
+              ></a>
+            </h1>
+          </div>
+        </div>
+      </div>
+      <div style="height: 50px;"></div>
+      <div class="container" style="display:flex;flex-direction:row;flex-wrap:wrap;justify-content:center">
+        <div
+          class="main-development-message"
+          :html="$page.contentSection('main-development')"
+        ></div>
+        <div style="width:40%">
+          <img src="$site.asset('zero.svg').link()" style="max-height:200px">
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="container" style="display:flex;flex-direction:column;justify-content:center;text-align:center;padding:20px 0">
+    <div :html="$page.contentSection('zsf')"></div>
+    <h1>
+      <a href="$site.page('zsf').link()" class="button" style="display: inline">
+        <ctx :text="$i18n.get('learn_more')"></ctx>
+      </a>
+    </h1>
+  </div>
+  <div class="alt-background" style="padding:20px 0">
+    <div class="container">
+      <ctx :html="$page.contentSection('sponsors')"></ctx>
+      <div :html="$page.contentSection('corporate-sponsors')"></div>
+      <ctx :html="$site.asset('corporate-sponsors.html').bytes()"></ctx>
+    </div>
+  </div>
+</div>

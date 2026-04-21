@@ -1,0 +1,28 @@
+.back = "← Zurück zu",
+// index.shtml
+.community = "Einer Community beitreten",
+.source = "Quellcode",
+.get_started = "JETZT STARTEN",
+.latest_release = "Letztes Release:",
+.documentation = "Dokumentation",
+.changes = "Änderungen",
+.overview = "Detaillierte Übersicht",
+.code_samples = "Weitere Codebeispiele",
+.all_communities = "Entdecke die Communities",
+.learn_more = "Weitere Details",
+.github_sponsors_update_frequency = "Dieser Abschnitt wird täglich aktualisiert.",
+// learn.shtml
+.version_unstable = "Unstable",
+.version_latest_stable = "Latest Stable",
+// download.shtml
+.release_notes = "Versionshinweise",
+.language_reference = "Sprachdokumentation",
+.std_docs = "Dokumentation der Standard Library",
+.download_source = "Quellen",
+.download_os = "OS",
+.download_arch = "Architektur",
+.download_filename = "Dateiname",
+.download_sig = "Kryptografische Signatur",
+.download_size = "Größe",
+// locale.shtml
+.languages_menu = "This page is also available in the following languages:",

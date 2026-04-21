@@ -1,0 +1,41 @@
+---
+.title = "ツール",
+.author = "",
+.date = @date("2024-08-07:00:00:00"),
+.layout = "page.shtml",
+.custom = {
+	"mobile_menu_title": "ツール",
+	"toc": true,
+},
+---
+
+# [言語サーバ]($heading.id('lsp'))
+言語サーバーは、シンタックスハイライト、オートコンプリート、その他多くの機能を取得するためのエディタに依存しないツールです。シンタックスハイライトの拡張機能ではなく、言語サーバーを使用することで、よりリッチな開発体験が得られます。
+
+- [zigtools/zls](https://github.com/zigtools/zls)
+
+# [テキストエディタ]($heading.id('editors'))
+エディタ固有のツール、主にシンタックスハイライタ。
+
+## VS Code
+- [ziglang/vscode-zig](https://codeberg.org/ziglang/vscode-zig)
+
+## Visual Studio
+- [ZigVS](https://marketplace.visualstudio.com/items?itemName=LuckystarStudio.ZigVS)
+
+## Sublime Text
+- [ziglang/sublime-zig-language](https://codeberg.org/ziglang/sublime-zig-language)
+
+## Vim
+- [ziglang/zig.vim](https://codeberg.org/ziglang/zig.vim)
+
+## Emacs
+- [ziglang/zig-mode](https://codeberg.org/ziglang/zig-mode)
+
+## Kate
+- [ziglang/kde-syntax-highlighting](https://codeberg.org/ziglang/kde-syntax-highlighting)
+
+## JetBrains family (IntelliJ IDEA, Fleet)
+- [ZigBrains](https://plugins.jetbrains.com/plugin/22456-zigbrains)
+- [Zig Fleet Plugin](https://plugins.jetbrains.com/plugin/26070-zig)
+

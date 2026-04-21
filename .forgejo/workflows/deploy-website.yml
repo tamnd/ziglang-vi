@@ -1,0 +1,30 @@
+name: deploy website
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: website
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on:
+      - self-hosted
+      - ember
+
+    steps:
+      - name: Checkout
+        uses: https://codeberg.org/ziglang/checkout@19af6bac491e2534a4687a50ee84fa7f13258d28
+
+      - name: Deploy
+        run: |
+          cp $HOME/work/index.json assets/download/index.json
+          ZIG_GLOBAL_CACHE_DIR=$HOME/cache ZIG_LOCAL_CACHE_DIR=$HOME/cache \
+            $HOME/deps/zig-x86_64-linux-0.16.0/zig build --summary new -p /var/www/html/

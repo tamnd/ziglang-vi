@@ -1,0 +1,11 @@
+---
+.title = "Devlog Archive",
+.author = "",
+.date = @date("2026-01-01T00:00:00"),
+.layout = "devlog-archive.shtml",
+.custom = {
+	"mobile_menu_title": "Devlog Archive",
+},
+---
+
+This page lists Devlog pages from the current and previous years.

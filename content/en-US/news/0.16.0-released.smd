@@ -1,0 +1,14 @@
+---
+.title = "0.16.0 Released",
+.date = "2026-04-14T00:00:00.000Z",
+.author = "Andrew Kelley",
+.layout = "news-page.shtml",
+---
+
+This release features **8 months of work**:
+changes from **244 different contributors**, spread among
+**1183 commits**.
+
+[Release Notes](https://ziglang.org/download/0.16.0/release-notes.html)
+
+[Download & Documentation](https://ziglang.org/download/#release-0.16.0)

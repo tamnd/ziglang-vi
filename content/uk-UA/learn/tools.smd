@@ -1,0 +1,40 @@
+---
+.title = "Інструменти",
+.author = "",
+.date = @date("2024-08-07:00:00:00"),
+.layout = "page.shtml",
+.custom = {
+	"mobile_menu_title": "Інструменти",
+	"toc": true,
+},
+---
+
+# [Мовні сервери]($heading.id('lsp'))
+Мовні сервери — це незалежні від редактора інструменти для отримання підсвічування синтаксису, автозавершення та багатьох інших функцій. Розгляньте можливість використання мовного сервера замість розширення для підсвічування синтаксису, щоб отримати більш багатий досвід розробки.
+
+- [zigtools/zls](https://github.com/zigtools/zls)
+
+# [Редактори Тексту]($heading.id('editors'))
+Спеціальні інструменти редактору коду, зазвичай тільки підсвічують текст. 
+
+## VS Code
+- [ziglang/vscode-zig](https://codeberg.org/ziglang/vscode-zig)
+
+## Visual Studio
+- [ZigVS](https://marketplace.visualstudio.com/items?itemName=LuckystarStudio.ZigVS)
+
+## Sublime Text
+- [ziglang/sublime-zig-language](https://codeberg.org/ziglang/sublime-zig-language)
+
+## Vim
+- [ziglang/zig.vim](https://codeberg.org/ziglang/zig.vim)
+
+## Emacs
+- [ziglang/zig-mode](https://codeberg.org/ziglang/zig-mode)
+
+## Kate
+- [ziglang/kde-syntax-highlighting](https://codeberg.org/ziglang/kde-syntax-highlighting)
+
+## JetBrains family (IntelliJ IDEA, Fleet і так далі)
+- [ZigBrains](https://plugins.jetbrains.com/plugin/22456-zigbrains)
+- [Zig Fleet Plugin](https://plugins.jetbrains.com/plugin/26070-zig)
