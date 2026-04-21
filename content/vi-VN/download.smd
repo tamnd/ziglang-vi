@@ -1,0 +1,23 @@
+---
+.title = "Tải xuống",
+.author = "",
+.date = @date("2024-08-07:00:00:00"),
+.layout = "download.shtml",
+.custom = {
+	"mobile_menu_title": "Tải xuống",
+	"OSs": ["Windows", "macOS", "Linux", "FreeBSD", "NetBSD", "OpenBSD"],
+},
+---
+# Các bản phát hành
+Bạn cũng có thể [cài Zig qua trình quản lý gói]($link.page('learn/getting-started').ref('managers')).
+
+Trang này cũng có [phiên bản JSON]($link.siteAsset('download/index.json')).
+
+Các tệp được ký bằng [minisign](https://jedisct1.github.io/minisign/) với khóa công khai sau:
+
+```
+RWSGOq2NVecA2UPNdBUZykf1CCb147pkmdtYxgb3Ti+JO/wCYvhbAb/U
+```
+
+> # [Đang dựng tự động hóa?]($block)
+> Nếu bạn đang tự động hóa việc tải Zig, hãy xem [Community Mirrors](/download/community-mirrors) để tránh downtime và giúp chúng tôi tiết kiệm băng thông.

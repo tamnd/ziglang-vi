@@ -90,5 +90,11 @@ Multilingual {
             .site_title = "Zig 프로그래밍 언어",
             .content_dir_path = "content/ko-KR",
         },
+        {
+            .code = "vi-VN",
+            .name = "Tiếng Việt",
+            .site_title = "Ngôn ngữ lập trình Zig",
+            .content_dir_path = "content/vi-VN",
+        },
     ],
 }
