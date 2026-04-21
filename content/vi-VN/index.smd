@@ -1,0 +1,61 @@
+---
+.title = "Trang chủ",
+.author = "",
+.date = @date("2024-08-07:00:00:00"),
+.layout = "index.shtml",
+.custom = {
+	"mobile_menu_title": "Trang chủ",
+},
+---
+
+[]($section.id("slogan"))
+Zig là ngôn ngữ lập trình đa năng kèm bộ công cụ, dùng để viết và bảo trì phần mềm **ổn định**, **tối ưu** và **tái sử dụng được**.
+
+[]($section.id("features"))
+## ⚡ Một ngôn ngữ đơn giản
+Tập trung gỡ lỗi ứng dụng của bạn, thay vì gỡ lỗi kiến thức về ngôn ngữ lập trình.
+
+- Không có luồng điều khiển ẩn.
+- Không có cấp phát bộ nhớ ẩn.
+- Không có tiền xử lý, không có macro.
+
+## ⚡ Comptime
+Một cách tiếp cận mới cho metaprogramming, dựa trên việc chạy mã tại thời điểm biên dịch và đánh giá lười.
+
+- Gọi được bất kỳ hàm nào tại thời điểm biên dịch.
+- Thao tác với kiểu dữ liệu như giá trị mà không tốn chi phí runtime.
+- Comptime mô phỏng kiến trúc đích.
+
+## ⚡ Bảo trì bằng Zig
+Cải thiện dần mã nguồn C/C++/Zig hiện có.
+
+- Dùng Zig như một trình biên dịch C/C++ thay thế, không phụ thuộc bên ngoài, hỗ trợ biên dịch chéo ngay từ đầu.
+- Tận dụng `zig build` để có môi trường phát triển đồng nhất trên mọi nền tảng.
+- Thêm một đơn vị biên dịch Zig vào dự án C/C++, mở thư viện chuẩn phong phú của Zig cho mã C/C++ của bạn.
+
+
+# [Cộng đồng]($section.id("community").attrs("section-title"))
+
+## [Cộng đồng Zig phân tán]($section.id("decentralized"))
+Bất cứ ai cũng có thể mở và duy trì một nơi cho cộng đồng gặp nhau.
+Không có khái niệm "chính thức" hay "không chính thức"; mỗi nơi gặp gỡ có quản trị viên và luật riêng của nó.
+
+
+## [Phát triển chính]($section.id("main-development"))
+Kho mã của Zig nằm tại [https://codeberg.org/ziglang/zig](https://codeberg.org/ziglang/zig), nơi chúng tôi cũng quản lý tracker lỗi và thảo luận các đề xuất.
+Người đóng góp cần tuân theo [Quy tắc ứng xử](/code-of-conduct) của Zig.
+
+
+# [Zig Software Foundation]($section.id("zsf").attrs("section-title"))
+
+## ZSF là một tổ chức phi lợi nhuận theo diện 501(c)(3).
+
+Zig Software Foundation là một tổ chức phi lợi nhuận, thành lập năm 2020 bởi Andrew Kelley, tác giả của Zig, với mục tiêu hỗ trợ phát triển ngôn ngữ. Hiện tại, ZSF đủ khả năng trả lương cạnh tranh cho một số ít người đóng góp cốt lõi, và chúng tôi mong sẽ mở rộng được cho nhiều người hơn trong tương lai.
+
+Zig Software Foundation hoạt động dựa vào khoản đóng góp.
+
+# [Nhà tài trợ]($section.id("sponsors").attrs("section-title"))
+
+## [Nhà tài trợ doanh nghiệp]($section.id("corporate-sponsors"))
+Những công ty sau đây tài trợ trực tiếp cho Zig Software Foundation.
+

@@ -1,0 +1,28 @@
+.back = "← Quay lại",
+// index.shtml
+.community = "Tham gia cộng đồng",
+.source = "Mã nguồn",
+.get_started = "BẮT ĐẦU",
+.latest_release = "Bản phát hành mới nhất:",
+.documentation = "Tài liệu",
+.changes = "Thay đổi",
+.overview = "Tổng quan đầy đủ",
+.code_samples = "Xem thêm ví dụ mã",
+.all_communities = "Xem tất cả cộng đồng",
+.learn_more = "Tìm hiểu thêm",
+.github_sponsors_update_frequency = "Mục này được cập nhật hằng ngày.",
+// learn.shtml
+.version_unstable = "Không ổn định",
+.version_latest_stable = "Bản ổn định mới nhất",
+// download.shtml
+.release_notes = "Ghi chú phát hành",
+.language_reference = "Tham chiếu ngôn ngữ",
+.std_docs = "Tài liệu thư viện chuẩn",
+.download_source = "Mã nguồn",
+.download_os = "Hệ điều hành",
+.download_arch = "Kiến trúc",
+.download_filename = "Tên tệp",
+.download_sig = "Chữ ký",
+.download_size = "Kích thước",
+// locale.shtml
+.languages_menu = "Trang này cũng có các bản dịch sau:",

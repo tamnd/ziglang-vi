@@ -1,0 +1,50 @@
+---
+.title = "Học",
+.author = "",
+.date = @date("2024-08-07:00:00:00"),
+.layout = "learn.shtml",
+.custom = {
+	"mobile_menu_title": "Học",
+},
+---
+# [Học]($section.id('learn'))
+Mục này liệt kê các tài liệu để đi từ chỗ chưa biết gì về Zig đến chỗ hiểu được triết lý của nó.
+
+
+## [Hướng dẫn]($section.id('guides'))
+Phần này cuối cùng sẽ được gộp chung với tài liệu thư viện chuẩn của Zig, nhưng trong lúc đó bạn có thể đọc tại đây.
+
+- [Hệ thống build Zig](./build-system/)
+Giới thiệu về hệ thống build của Zig.
+
+## Giới thiệu
+Đây là những bài giới thiệu về Zig, dành cho lập trình viên có nền tảng khác nhau.
+
+- [Tổng quan chi tiết](./overview/)
+Tổng quan tính năng của Zig từ góc nhìn lập trình hệ thống.
+- [Tại sao chọn Zig khi đã có C++, D và Rust?](./why_zig_rust_d_cpp/)
+Giới thiệu Zig cho lập trình viên C++, D và Rust.
+- [Ví dụ mã](./samples/)
+Một số đoạn mã để cảm nhận code Zig trông như thế nào.
+- [Công cụ](./tools/)
+Các công cụ hữu ích giúp bạn viết Zig.
+
+
+## Bắt đầu
+Nếu bạn đã sẵn sàng viết Zig, hướng dẫn này giúp bạn dựng môi trường.
+
+- [Bắt đầu với Zig](./getting-started)
+
+## Tài liệu học online
+- [Introduction to Zig: a project-based book](https://pedropark99.github.io/zig-book/)
+Một cuốn sách giới thiệu Zig, mở và theo hướng kỹ thuật.
+- [zig.guide](https://zig.guide)
+Một bài giới thiệu Zig có cấu trúc, do [Sobeston](https://github.com/sobeston) viết.
+- [Ziglings](https://ziglings.org)
+Học Zig bằng cách sửa những chương trình nhỏ bị hỏng.
+- [Zig on Exercism](https://exercism.org/tracks/zig)
+Giải bài tập lập trình và được mentor giúp bạn thành thạo Zig.
+
+## Video và bài viết liên quan
+- [Road to Zig 1.0](https://www.youtube.com/watch?v=Gv2I7qTux7g) [video]
+Video của [Andrew Kelley](https://andrewkelley.me) giới thiệu Zig và triết lý của nó.
