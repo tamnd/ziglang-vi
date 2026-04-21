@@ -1,0 +1,648 @@
+---
+.title = "Tổng quan",
+.author = "",
+.date = @date("2024-08-07:00:00:00"),
+.layout = "page.shtml",
+.custom = {
+	"mobile_menu_title": "Tổng quan",
+},
+---
+# Tính năng nổi bật
+## [Ngôn ngữ nhỏ, đơn giản]($heading.id('small-simple-language'))
+
+Tập trung gỡ lỗi ứng dụng, thay vì gỡ lỗi kiến thức về ngôn ngữ lập trình.
+
+Toàn bộ cú pháp của Zig được mô tả trong một [file PEG grammar 580 dòng](https://ziglang.org/documentation/master/#Grammar).
+
+Không có **luồng điều khiển ẩn**, không có cấp phát bộ nhớ ẩn, không có tiền xử lý và không có macro. Nếu mã Zig không trông như đang nhảy đi gọi hàm, thì nó không gọi. Nghĩa là đoạn sau chỉ gọi `foo()` rồi `bar()`, và điều đó được đảm bảo mà không cần biết kiểu của bất cứ biến nào:
+
+```zig
+var a = b + c.d;
+foo();
+bar();
+```
+
+Ví dụ về luồng điều khiển ẩn:
+
+- D có hàm `@property`, là method trông như truy cập field, nên trong ví dụ trên `c.d` có thể đang gọi hàm.
+- C++, D và Rust có overload toán tử, nên `+` có thể đang gọi hàm.
+- C++, D và Go có throw/catch exception, nên `foo()` có thể ném exception và ngăn `bar()` chạy.
+
+ Zig ủng hộ việc bảo trì và khả năng đọc mã bằng cách yêu cầu mọi luồng điều khiển đều được thể hiện qua từ khóa ngôn ngữ và cuộc gọi hàm.
+
+## [Hiệu năng và an toàn: chọn cả hai]($heading.id('performance-and-safety-choose-two'))
+
+Zig có bốn [chế độ build](https://ziglang.org/documentation/master/#Build-Mode), và bạn có thể phối hợp chúng ở [mức chi tiết từng scope](https://ziglang.org/documentation/master/#setRuntimeSafety).
+
+| Tham số | [Debug](https://ziglang.org/documentation/master/#Debug) | [ReleaseSafe](https://ziglang.org/documentation/master/#ReleaseSafe) | [ReleaseFast](https://ziglang.org/documentation/master/#ReleaseFast) | [ReleaseSmall](https://ziglang.org/documentation/master/#ReleaseSmall) |
+|-----------|-------|-------------|-------------|--------------|
+Tối ưu hóa: tăng tốc độ, ảnh hưởng gỡ lỗi, ảnh hưởng thời gian biên dịch | | On | On | On |
+Kiểm tra an toàn lúc runtime: giảm tốc độ, tăng kích thước, crash thay vì để undefined behavior | On | On | | |
+
+Đây là trông của [Integer Overflow](https://ziglang.org/documentation/master/#Integer-Overflow) tại thời điểm biên dịch, bất kể chế độ build nào:
+
+[]($code.language('=html').buildAsset('features/1-integer-overflow.zig'))
+
+Và khi xảy ra lúc runtime, trong bản build có kiểm tra an toàn:
+
+[]($code.language('=html').buildAsset('features/2-integer-overflow-runtime.zig'))
+
+
+Các [stack trace này chạy trên mọi target](#stack-traces-on-all-targets), kể cả [freestanding](https://andrewkelley.me/post/zig-stack-traces-kernel-panic-bare-bones-os.html).
+
+Với Zig, bạn có thể dựa vào chế độ build có bật kiểm tra an toàn, rồi tắt có chọn lọc tại những chỗ nghẽn hiệu năng. Ví dụ, đoạn trên có thể sửa thành:
+
+[]($code.language('=html').buildAsset('features/3-undefined-behavior.zig'))
+
+Zig dùng [Illegal Behavior](https://ziglang.org/documentation/master/#Illegal-Behavior) như một con dao sắc vừa để tránh lỗi, vừa để tăng hiệu năng.
+
+Nói đến hiệu năng, Zig nhanh hơn C.
+
+- Toàn bộ mã Zig nằm trong một đơn vị biên dịch, được tối ưu cùng nhau.
+- Illegal behavior được chọn kỹ. Ví dụ, ở Zig cả số nguyên có dấu và không dấu đều có illegal behavior khi tràn, trong khi ở C chỉ có số nguyên có dấu. Điều này [mở đường cho những tối ưu mà C không làm được](https://godbolt.org/z/vhjv9oM1W).
+- Zig phơi bày trực tiếp [kiểu vector SIMD](https://ziglang.org/documentation/master/#Vectors), giúp viết mã vector hóa khả chuyển dễ dàng hơn.
+- Thư viện chuẩn cung cấp những cấu trúc dữ liệu cần thiết như hash map và array list, trong khi ở C người ta hay chọn linked list cho đơn giản.
+- Các tính năng CPU cao cấp được bật mặc định, trừ khi đang [biên dịch chéo](#cross-compiling-is-a-first-class-use-case).
+
+## Zig cạnh tranh với C thay vì phụ thuộc vào C
+
+Thư viện chuẩn của Zig tích hợp với libc nhưng không phụ thuộc. Đây là Hello World:
+
+[]($code.language('=html').buildAsset('features/4-hello.zig'))
+
+Khi biên dịch với `-O ReleaseSmall`, lược bỏ debug symbol, chạy đơn luồng, ta có một executable tĩnh 9.8 KiB cho target x86_64-linux:
+```
+$ zig build-exe hello.zig -O ReleaseSmall -fstrip -fsingle-threaded
+$ wc -c hello
+9944 hello
+$ ldd hello
+  not a dynamic executable
+```
+
+Bản Windows còn nhỏ hơn, chỉ 4096 byte:
+```
+$ zig build-exe hello.zig -O ReleaseSmall -fstrip -fsingle-threaded -target x86_64-windows
+$ wc -c hello.exe
+4096 hello.exe
+$ file hello.exe
+hello.exe: PE32+ executable (console) x86-64, for MS Windows
+```
+
+## Khai báo cấp cao không phụ thuộc thứ tự
+
+Các khai báo cấp cao như biến toàn cục không phụ thuộc thứ tự và được phân tích lazy. Giá trị khởi tạo của biến toàn cục được [đánh giá tại thời điểm biên dịch](#compile-time-reflection-and-compile-time-code-execution).
+
+[]($code.language('=html').buildAsset('features/5-global-variables.zig'))
+
+## Kiểu optional thay cho con trỏ null
+
+Ở các ngôn ngữ khác, tham chiếu null là nguồn gốc của nhiều exception lúc runtime, và thậm chí bị coi là [sai lầm tệ nhất của khoa học máy tính](https://www.lucidchart.com/techblog/2015/08/31/the-worst-mistake-of-computer-science/).
+
+Con trỏ trần ở Zig không thể là null:
+
+[]($code.language('=html').buildAsset('features/6-null-to-ptr.zig'))
+
+Nhưng mọi kiểu đều có thể chuyển thành [kiểu optional](https://ziglang.org/documentation/master/#Optionals) bằng cách đặt dấu `?` phía trước:
+
+[]($code.language('=html').buildAsset('features/7-optional-syntax.zig'))
+
+Để lấy giá trị bên trong optional, có thể dùng `orelse` để cung cấp giá trị mặc định:
+
+[]($code.language('=html').buildAsset('features/8-optional-orelse.zig'))
+
+Hoặc dùng if:
+
+[]($code.language('=html').buildAsset('features/9-optional-if.zig'))
+
+ Cú pháp tương tự cũng hoạt động với [while](https://ziglang.org/documentation/master/#while):
+
+[]($code.language('=html').buildAsset('features/10-optional-while.zig'))
+
+## Quản lý bộ nhớ thủ công
+
+Một thư viện viết bằng Zig có thể dùng được ở mọi đâu:
+
+- [Ứng dụng desktop](https://isaacfreund.com/software/river/)
+- Server low-latency
+- [Cơ sở dữ liệu](https://tigerbeetle.com/)
+- Nhân hệ điều hành
+- [Thiết bị embedded](https://microzig.tech/)
+- Phần mềm real-time, như biểu diễn trực tiếp, máy bay, máy tạo nhịp tim
+- Trong trình duyệt web hay plugin khác, qua WebAssembly
+- Trong ngôn ngữ lập trình khác, qua C ABI
+
+Để làm được vậy, lập trình viên Zig phải tự quản lý bộ nhớ và phải xử lý khi cấp phát thất bại.
+
+Thư viện chuẩn của Zig cũng vậy. Mọi hàm cần cấp phát bộ nhớ đều nhận một tham số allocator. Nhờ vậy, thư viện chuẩn của Zig có thể dùng ngay cả cho target freestanding.
+
+Ngoài [Cách tiếp cận mới cho xử lý lỗi](#a-fresh-take-on-error-handling), Zig có [defer](https://ziglang.org/documentation/master/#defer) và [errdefer](https://ziglang.org/documentation/master/#errdefer) giúp quản lý tài nguyên (không chỉ bộ nhớ) đơn giản và dễ kiểm chứng.
+
+Ví dụ về `defer`, xem [Tích hợp với thư viện C không cần FFI/binding](#integration-with-c-libraries-without-ffibindings). Đây là một ví dụ dùng `errdefer`:
+[]($code.language('=html').buildAsset('features/11-errdefer.zig'))
+
+
+## [Cách tiếp cận mới cho xử lý lỗi]($heading.id('a-fresh-take-on-error-handling'))
+
+Lỗi là giá trị, và không thể bị bỏ qua:
+
+[]($code.language('=html').buildAsset('features/12-errors-as-values.zig'))
+
+Lỗi có thể xử lý bằng [catch](https://ziglang.org/documentation/master/#catch):
+
+[]($code.language('=html').buildAsset('features/13-errors-catch.zig'))
+
+Từ khóa [try](https://ziglang.org/documentation/master/#try) là viết tắt cho `catch |err| return err`:
+
+[]($code.language('=html').buildAsset('features/14-errors-try.zig'))
+
+Lưu ý đây là [Error Return Trace](https://ziglang.org/documentation/master/#Error-Return-Traces), không phải [stack trace](#stack-traces-on-all-targets). Mã không phải trả giá unwind stack để tạo ra trace đó.
+
+Từ khóa [switch](https://ziglang.org/documentation/master/#switch) khi dùng trên error đảm bảo mọi lỗi đều được xử lý:
+
+[]($code.language('=html').buildAsset('features/15-errors-switch.zig'))
+
+Từ khóa [unreachable](https://ziglang.org/documentation/master/#unreachable) dùng để khẳng định sẽ không có lỗi nào xảy ra:
+
+[]($code.language('=html').buildAsset('features/16-unreachable.zig'))
+
+Ở các chế độ build không an toàn, cái này kích hoạt [undefined behavior](#performance-and-safety-choose-two), nên chỉ dùng khi chắc chắn thành công.
+
+### [Stack trace trên mọi target]($heading.id("stack-traces-on-all-targets"))
+
+Stack trace và [error return trace](https://ziglang.org/documentation/master/#Error-Return-Traces) xuất hiện trong trang này chạy trên mọi target Tier 1 và một số target Tier 2. [Kể cả freestanding](https://andrewkelley.me/post/zig-stack-traces-kernel-panic-bare-bones-os.html).
+
+Ngoài ra, thư viện chuẩn có khả năng bắt stack trace tại một điểm bất kỳ rồi in ra stderr sau:
+
+[]($code.language('=html').buildAsset('features/17-stack-traces.zig'))
+
+DebugAllocator trong thư viện chuẩn dùng kỹ thuật này để báo rò bộ nhớ và double free.
+
+## Cấu trúc dữ liệu và hàm generic
+
+Kiểu là giá trị và phải biết tại thời điểm biên dịch:
+
+[]($code.language('=html').buildAsset('features/18-types.zig'))
+
+Một cấu trúc dữ liệu generic đơn giản là một hàm trả về `type`:
+
+[]($code.language('=html').buildAsset('features/19-generics.zig'))
+
+## [Reflection tại thời điểm biên dịch và thực thi mã tại thời điểm biên dịch]($heading.id('compile-time-reflection-and-compile-time-code-execution'))
+
+Hàm built-in [@typeInfo](https://ziglang.org/documentation/master/#typeInfo) cho phép reflection:
+
+[]($code.language('=html').buildAsset('features/20-reflection.zig'))
+
+Thư viện chuẩn của Zig dùng kỹ thuật này để cài đặt formatted printing. Dù là [ngôn ngữ nhỏ, đơn giản](#small-simple-language), formatted printing của Zig được viết hoàn toàn bằng Zig. Trong khi đó, ở C, các lỗi biên dịch cho printf được hard-code trong trình biên dịch. Tương tự, ở Rust, macro printf được hard-code trong trình biên dịch.
+
+Zig cũng có thể đánh giá hàm và khối mã tại thời điểm biên dịch. Ở một số ngữ cảnh, ví dụ khởi tạo biến toàn cục, biểu thức được đánh giá tại thời điểm biên dịch một cách ngầm định. Trong các trường hợp khác, có thể đánh giá mã tại thời điểm biên dịch một cách tường minh bằng từ khóa [comptime](https://ziglang.org/documentation/master/#comptime). Kết hợp với assertion, nó rất mạnh:
+
+[]($code.language('=html').buildAsset('features/21-comptime.zig'))
+
+## [Tích hợp với thư viện C không cần FFI/binding]($heading.id('integration-with-c-libraries-without-ffibindings'))
+
+[@cImport](https://ziglang.org/documentation/master/#cImport) import trực tiếp kiểu, biến, hàm và macro đơn giản từ C vào Zig. Nó còn chuyển các hàm inline từ C sang Zig.
+
+Đây là ví dụ phát ra sóng sin dùng [libsoundio](http://libsound.io/):
+
+<u>sine.zig</u>
+[]($code.language('=html').buildAsset('features/22-sine-wave.zig'))
+
+```
+$ zig build-exe sine.zig -lsoundio -lc
+$ ./sine
+Output device: Built-in Audio Analog Stereo
+^C
+```
+
+[Mã Zig này đơn giản hơn nhiều so với mã C tương đương](https://gist.github.com/andrewrk/d285c8f912169329e5e28c3d0a63c1d8), lại an toàn hơn, và tất cả làm được bằng cách import trực tiếp header C, không cần binding API.
+
+*Zig dùng thư viện C tốt hơn cả C dùng thư viện C.*
+
+### [Zig cũng là một trình biên dịch C]($heading.id('zig-is-also-a-c-compiler'))
+
+Đây là ví dụ Zig build mã C:
+
+<u>hello.c</u>
+```c
+#include <stdio.h>
+
+int main(int argc, char **argv) {
+    printf("Hello world\n");
+    return 0;
+}
+```
+
+```
+$ zig build-exe hello.c -lc
+$ ./hello
+Hello world
+```
+
+Dùng `--verbose-cc` để xem lệnh trình biên dịch C đã chạy:
+```
+$ zig build-exe hello.c -lc --verbose-cc
+zig cc -MD -MV -MF .zig-cache/tmp/42zL6fBH8fSo-hello.o.d -nostdinc -fno-spell-checking -isystem /home/andy/dev/zig/build/lib/zig/include -isystem /home/andy/dev/zig/build/lib/zig/libc/include/x86_64-linux-gnu -isystem /home/andy/dev/zig/build/lib/zig/libc/include/generic-glibc -isystem /home/andy/dev/zig/build/lib/zig/libc/include/x86_64-linux-any -isystem /home/andy/dev/zig/build/lib/zig/libc/include/any-linux-any -march=native -g -fstack-protector-strong --param ssp-buffer-size=4 -fno-omit-frame-pointer -o .zig-cache/tmp/42zL6fBH8fSo-hello.o -c hello.c -fPIC
+```
+
+Để ý là nếu bạn chạy lại lệnh này, không có output mới và nó kết thúc tức thì:
+```
+$ time zig build-exe hello.c -lc --verbose-cc
+
+real	0m0.027s
+user	0m0.018s
+sys	0m0.009s
+```
+
+Đó là nhờ [Build Artifact Caching](https://ziglang.org/download/0.4.0/release-notes.html#Build-Artifact-Caching). Zig tự phân tích file .d qua hệ thống cache đáng tin cậy để tránh làm lại việc.
+
+Không chỉ biên dịch được mã C, có một lý do rất tốt để dùng Zig làm trình biên dịch C: [Zig đi kèm libc](#zig-ships-with-libc).
+
+### Export hàm, biến và kiểu cho mã C dùng
+
+Một trong những ứng dụng chính của Zig là xuất thư viện theo C ABI để các ngôn ngữ khác gọi vào. Từ khóa `export` đặt trước hàm, biến, kiểu sẽ khiến chúng thuộc về API của thư viện:
+
+<u>mathtest.zig</u>
+[]($code.language('=html').buildAsset('features/23-math-test.zig'))
+
+Tạo thư viện tĩnh:
+```
+$ zig build-lib mathtest.zig
+```
+
+Tạo thư viện động:
+```
+$ zig build-lib mathtest.zig -dynamic
+```
+
+Đây là ví dụ dùng [hệ thống build của Zig](#zig-build-system):
+
+<u>test.c</u>
+```c
+#include "mathtest.h"
+#include <stdio.h>
+
+int main(int argc, char **argv) {
+    int32_t result = add(42, 1337);
+    printf("%d\n", result);
+    return 0;
+}
+```
+
+<u>build.zig</u>
+[]($code.language('=html').buildAsset('features/24-build.zig'))
+
+```
+$ zig build test
+1379
+```
+
+## [Biên dịch chéo là trường hợp bậc nhất]($heading.id('cross-compiling-is-a-first-class-use-case'))
+
+Zig build được cho mọi target được hỗ trợ, độc lập với máy host. Không có "cross toolchain" tách biệt. Đây là Hello World native:
+
+[]($code.language('=html').buildAsset('features/4-hello.zig'))
+
+Giờ build cho x86_64-windows, x86_64-macos và aarch64-linux:
+```
+$ zig build-exe hello.zig -target x86_64-windows
+$ file hello.exe
+hello.exe: PE32+ executable (console) x86-64, for MS Windows
+$ zig build-exe hello.zig -target x86_64-macos
+$ file hello
+hello: Mach-O 64-bit x86_64 executable, flags:<NOUNDEFS|DYLDLINK|TWOLEVEL|PIE>
+$ zig build-exe hello.zig -target aarch64-linux
+$ file hello
+hello: ELF 64-bit LSB executable, ARM aarch64, version 1 (SYSV), statically linked, with debug_info, not stripped
+```
+
+Việc này chạy trên mọi target Tier 3+, cho mọi target Tier 3+.
+
+### [Zig đi kèm libc]($heading.id('zig-ships-with-libc'))
+
+Có thể xem danh sách libc target bằng `zig targets`:
+```
+...
+.libc = .{
+  "arc-linux-gnu",
+  "arm-freebsd-eabihf",
+  "arm-linux-gnueabi",
+  "arm-linux-gnueabihf",
+  "arm-linux-musleabi",
+  "arm-linux-musleabihf",
+  "arm-netbsd-eabi",
+  "arm-netbsd-eabihf",
+  "armeb-linux-gnueabi",
+  "armeb-linux-gnueabihf",
+  "armeb-linux-musleabi",
+  "armeb-linux-musleabihf",
+  "armeb-netbsd-eabi",
+  "armeb-netbsd-eabihf",
+  "thumb-linux-musleabi",
+  "thumb-linux-musleabihf",
+  "thumb-windows-gnu",
+  "thumbeb-linux-musleabi",
+  "thumbeb-linux-musleabihf",
+  "aarch64-freebsd-none",
+  "aarch64-linux-gnu",
+  "aarch64-linux-musl",
+  "aarch64-maccatalyst-none",
+  "aarch64-macos-none",
+  "aarch64-netbsd-none",
+  "aarch64-windows-gnu",
+  "aarch64_be-linux-gnu",
+  "aarch64_be-linux-musl",
+  "aarch64_be-netbsd-none",
+  "csky-linux-gnueabi",
+  "csky-linux-gnueabihf",
+  "hexagon-linux-musl",
+  "loongarch64-linux-gnu",
+  "loongarch64-linux-gnusf",
+  "loongarch64-linux-musl",
+  "loongarch64-linux-muslsf",
+  "m68k-linux-gnu",
+  "m68k-linux-musl",
+  "m68k-netbsd-none",
+  "mips-linux-gnueabi",
+  "mips-linux-gnueabihf",
+  "mips-linux-musleabi",
+  "mips-linux-musleabihf",
+  "mips-netbsd-eabi",
+  "mips-netbsd-eabihf",
+  "mipsel-linux-gnueabi",
+  "mipsel-linux-gnueabihf",
+  "mipsel-linux-musleabi",
+  "mipsel-linux-musleabihf",
+  "mipsel-netbsd-eabi",
+  "mipsel-netbsd-eabihf",
+  "mips64-linux-gnuabi64",
+  "mips64-linux-gnuabin32",
+  "mips64-linux-muslabi64",
+  "mips64-linux-muslabin32",
+  "mips64el-linux-gnuabi64",
+  "mips64el-linux-gnuabin32",
+  "mips64el-linux-muslabi64",
+  "mips64el-linux-muslabin32",
+  "powerpc-linux-gnueabi",
+  "powerpc-linux-gnueabihf",
+  "powerpc-linux-musleabi",
+  "powerpc-linux-musleabihf",
+  "powerpc-netbsd-eabi",
+  "powerpc-netbsd-eabihf",
+  "powerpc64-freebsd-none",
+  "powerpc64-linux-gnu",
+  "powerpc64-linux-musl",
+  "powerpc64le-freebsd-none",
+  "powerpc64le-linux-gnu",
+  "powerpc64le-linux-musl",
+  "riscv32-linux-gnu",
+  "riscv32-linux-musl",
+  "riscv64-freebsd-none",
+  "riscv64-linux-gnu",
+  "riscv64-linux-musl",
+  "s390x-linux-gnu",
+  "s390x-linux-musl",
+  "sparc-linux-gnu",
+  "sparc-netbsd-none",
+  "sparc64-linux-gnu",
+  "sparc64-netbsd-none",
+  "wasm32-wasi-musl",
+  "x86-freebsd-none",
+  "x86-linux-gnu",
+  "x86-linux-musl",
+  "x86-netbsd-none",
+  "x86-windows-gnu",
+  "x86_64-freebsd-none",
+  "x86_64-linux-gnu",
+  "x86_64-linux-gnux32",
+  "x86_64-linux-musl",
+  "x86_64-linux-muslx32",
+  "x86_64-maccatalyst-none",
+  "x86_64-macos-none",
+  "x86_64-netbsd-none",
+  "x86_64-windows-gnu",
+},
+...
+ ```
+
+Nghĩa là `-lc` cho những target này *không phụ thuộc file hệ thống nào*.
+
+Xem lại [ví dụ C hello world](#zig-is-also-a-c-compiler):
+```
+$ zig build-exe hello.c -lc
+$ ./hello
+Hello world
+$ ldd ./hello
+	linux-vdso.so.1 (0x00007ffd03dc9000)
+	libc.so.6 => /lib/libc.so.6 (0x00007fc4b62be000)
+	libm.so.6 => /lib/libm.so.6 (0x00007fc4b5f29000)
+	libpthread.so.0 => /lib/libpthread.so.0 (0x00007fc4b5d0a000)
+	libdl.so.2 => /lib/libdl.so.2 (0x00007fc4b5b06000)
+	librt.so.1 => /lib/librt.so.1 (0x00007fc4b58fe000)
+	/lib/ld-linux-x86-64.so.2 => /lib64/ld-linux-x86-64.so.2 (0x00007fc4b6672000)
+```
+
+[glibc](https://www.gnu.org/software/libc/) không hỗ trợ build tĩnh, nhưng [musl](https://www.musl-libc.org/) thì có:
+```
+$ zig build-exe hello.c -lc -target x86_64-linux-musl
+$ ./hello
+Hello world
+$ ldd hello
+  not a dynamic executable
+```
+
+Trong ví dụ này, Zig tự build musl libc từ mã nguồn rồi link vào. Bản build của musl libc cho x86_64-linux vẫn còn đó nhờ [hệ thống cache](https://ziglang.org/download/0.4.0/release-notes.html#Build-Artifact-Caching), nên lần sau cần lại thì có ngay.
+
+Nghĩa là tính năng này dùng được trên mọi nền tảng. Người dùng Windows và macOS có thể build mã Zig và C, link với libc, cho bất kỳ target nào trong danh sách trên. Tương tự, mã có thể biên dịch chéo cho kiến trúc khác:
+```
+$ zig build-exe hello.c -lc -target aarch64-linux-gnu
+$ file hello
+hello: ELF 64-bit LSB executable, ARM aarch64, version 1 (SYSV), dynamically linked, interpreter /lib/ld-linux-aarch64.so.1, for GNU/Linux 2.0.0, with debug_info, not stripped
+```
+
+Zig là trình biên dịch C tốt hơn cả các trình biên dịch C.
+
+Tính năng này không chỉ là gộp sẵn cross-compilation toolchain vào Zig. Ví dụ, tổng dung lượng header libc mà Zig đi kèm là 130 MiB khi giải nén. Trong khi đó, riêng header musl libc + linux cho x86_64 đã là 8 MiB, và glibc là 3.1 MiB (glibc còn thiếu linux header), mà Zig hiện đi kèm 97 bản libc khác nhau. Nếu gộp thẳng thì thành 776 MiB. Tuy vậy, nhờ [công cụ process_headers](https://codeberg.org/ziglang/zig/src/commit/0.15.2/tools/process_headers.zig) và [chút công thủ công](https://codeberg.org/ziglang/infra/src/branch/master/libc-update), bản binary tarball của Zig giữ được ở khoảng 50 MiB, dù hỗ trợ libc cho tất cả target trên, cộng với compiler-rt, libunwind, libcxx, libtsan, và đồng thời là trình biên dịch C tương thích clang. So sánh cho vui: bản build Windows của chính clang 8.0.0 từ llvm.org là 132 MiB.
+
+## [Hệ thống build và trình quản lý gói của Zig]($heading.id('zig-build-system'))
+
+Zig đi kèm hệ thống build, nên bạn không cần công cụ riêng để dàn dựng quá trình build.
+```
+$ zig init
+info: created build.zig
+info: created build.zig.zon
+info: created src/main.zig
+info: created src/root.zig
+info: see `zig build --help` for a menu of options
+```
+
+<u>src/main.zig</u>
+[]($code.language('=html').buildAsset('features/25-all-bases.zig'))
+
+
+<u>build.zig</u>
+[]($code.language('=html').buildAsset('features/26-build.zig'))
+
+
+Xem thử menu `--help`.
+```
+$ zig build --help
+Usage: zig build [steps] [options]
+
+Steps:
+  install (default)            Copy build artifacts to prefix path
+  uninstall                    Remove build artifacts from prefix path
+  run                          Run the app
+  test                         Run tests
+
+Project-Specific Options:
+  -Dtarget=[string]            The CPU architecture, OS, and ABI to build for
+  -Dcpu=[string]               Target CPU features to add or subtract
+  -Dofmt=[string]              Target object format
+  -Ddynamic-linker=[string]    Path to interpreter on the target system
+  -Doptimize=[enum]            Prioritize performance, safety, or binary size
+                                 Supported Values:
+                                   Debug
+                                   ReleaseSafe
+                                   ReleaseFast
+                                   ReleaseSmall
+
+System Integration Options:
+  --search-prefix [path]       Add a path to look for binaries, libraries, headers
+  --sysroot [path]             Set the system root directory (usually /)
+  --libc [file]                Provide a file which specifies libc paths
+
+  --system [pkgdir]            Disable package fetching; enable all integrations
+  -fsys=[name]                 Enable a system integration
+  -fno-sys=[name]              Disable a system integration
+
+  Available System Integrations:                Enabled:
+  (none)                                        -
+
+General Options:
+  -p, --prefix [path]          Where to install files (default: zig-out)
+  --prefix-lib-dir [path]      Where to install libraries
+  --prefix-exe-dir [path]      Where to install executables
+  --prefix-include-dir [path]  Where to install C header files
+
+  --release[=mode]             Request release mode, optionally specifying a
+                               preferred optimization mode: fast, safe, small
+
+  -fdarling,  -fno-darling     Integration with system-installed Darling to
+                               execute macOS programs on Linux hosts
+                               (default: no)
+  -fqemu,     -fno-qemu        Integration with system-installed QEMU to execute
+                               foreign-architecture programs on Linux hosts
+                               (default: no)
+  --libc-runtimes [path]       Enhances QEMU integration by providing dynamic libc
+                               (e.g. glibc or musl) built for multiple foreign
+                               architectures, allowing execution of non-native
+                               programs that link with libc.
+  -frosetta,  -fno-rosetta     Rely on Rosetta to execute x86_64 programs on
+                               ARM64 macOS hosts. (default: no)
+  -fwasmtime, -fno-wasmtime    Integration with system-installed wasmtime to
+                               execute WASI binaries. (default: no)
+  -fwine,     -fno-wine        Integration with system-installed Wine to execute
+                               Windows programs on Linux hosts. (default: no)
+
+  -h, --help                   Print this help and exit
+  -l, --list-steps             Print available steps
+  --verbose                    Print commands before executing them
+  --color [auto|off|on]        Enable or disable colored error messages
+  --error-style [style]        Control how build errors are printed
+    verbose                    (Default) Report errors with full context
+    minimal                    Report errors after summary, excluding context like command lines
+    verbose_clear              Like 'verbose', but clear the terminal at the start of each update
+    minimal_clear              Like 'minimal', but clear the terminal at the start of each update
+  --multiline-errors [style]   Control how multi-line error messages are printed
+    indent                     (Default) Indent non-initial lines to align with initial line
+    newline                    Include a leading newline so that the error message is on its own lines
+    none                       Print as usual so the first line is misaligned
+  --summary [mode]             Control the printing of the build summary
+    all                        Print the build summary in its entirety
+    new                        Omit cached steps
+    failures                   (Default if short-lived) Only print failed steps
+    line                       (Default if long-lived) Only print the single-line summary
+    none                       Do not print the build summary
+  -j<N>                        Limit concurrent jobs (default is to use all CPU cores)
+  --maxrss <bytes>             Limit memory usage (default is to use available memory)
+  --skip-oom-steps             Instead of failing, skip steps that would exceed --maxrss
+  --test-timeout <timeout>     Limit execution time of unit tests, terminating if exceeded.
+                               The timeout must include a unit: ns, us, ms, s, m, h
+  --fetch[=mode]               Fetch dependency tree (optionally choose laziness) and exit
+    needed                     (Default) Lazy dependencies are fetched as needed
+    all                        Lazy dependencies are always fetched
+  --watch                      Continuously rebuild when source files are modified
+  --debounce <ms>              Delay before rebuilding after changed file detected
+  --webui[=ip]                 Enable the web interface on the given IP address
+  --fuzz[=limit]               Continuously search for unit test failures with an optional
+                               limit to the max number of iterations. The argument supports
+                               an optional 'K', 'M', or 'G' suffix (e.g. '10K'). Implies
+                               '--webui' when no limit is specified.
+  --time-report                Force full rebuild and provide detailed information on
+                               compilation time of Zig source code (implies '--webui')
+     -fincremental             Enable incremental compilation
+  -fno-incremental             Disable incremental compilation
+
+Advanced Options:
+  -freference-trace[=num]      How many lines of reference trace should be shown per compile error
+  -fno-reference-trace         Disable reference trace
+  -fallow-so-scripts           Allows .so files to be GNU ld scripts
+  -fno-allow-so-scripts        (default) .so files must be ELF files
+  --build-file [file]          Override path to build.zig
+  --cache-dir [path]           Override path to local Zig cache directory
+  --global-cache-dir [path]    Override path to global Zig cache directory
+  --zig-lib-dir [arg]          Override path to Zig lib directory
+  --build-runner [file]        Override path to build runner
+  --seed [integer]             For shuffling dependency traversal order (default: random)
+  --build-id[=style]           At a minor link-time expense, embeds a build ID in binaries
+      fast                     8-byte non-cryptographic hash (COFF, ELF, WASM)
+      sha1, tree               20-byte cryptographic hash (ELF, WASM)
+      md5                      16-byte cryptographic hash (ELF)
+      uuid                     16-byte random UUID (ELF, WASM)
+      0x[hexstring]            Constant ID, maximum 32 bytes (ELF, WASM)
+      none                     (default) No build ID
+  --debug-log [scope]          Enable debugging the compiler
+  --debug-pkg-config           Fail if unknown pkg-config flags encountered
+  --debug-rt                   Debug compiler runtime libraries
+  --verbose-link               Enable compiler debug output for linking
+  --verbose-air                Enable compiler debug output for Zig AIR
+  --verbose-llvm-ir[=file]     Enable compiler debug output for LLVM IR
+  --verbose-llvm-bc=[file]     Enable compiler debug output for LLVM BC
+  --verbose-cimport            Enable compiler debug output for C imports
+  --verbose-cc                 Enable compiler debug output for C compilation
+  --verbose-llvm-cpu-features  Enable compiler debug output for LLVM CPU features
+```
+
+Một trong các step sẵn có là run.
+```
+$ zig build run
+All your codebase are belong to us.
+Run `zig build test` to run the tests.
+```
+
+Vài ví dụ build script:
+
+- [Build script của game Tetris OpenGL](https://github.com/andrewrk/tetris/blob/master/build.zig)
+- [Build script của game arcade bare metal trên Raspberry Pi 3](https://github.com/andrewrk/clashos/blob/master/build.zig)
+- [Build script của trình biên dịch Zig](https://codeberg.org/ziglang/zig/src/branch/master/build.zig)
+
+## Hỗ trợ nhiều target
+
+Zig dùng hệ thống "support tier" để thể hiện mức hỗ trợ cho từng target.
+
+[Bảng hỗ trợ tính đến Zig 0.15](https://ziglang.org/download/0.15.1/release-notes.html#Target-Support)
+
+## Thân thiện với người bảo trì gói
+
+Dù Zig là self-hosted, việc build từ mã nguồn chỉ phụ thuộc toolchain C/C++ và LLVM của hệ thống, qua các bước CMake chuẩn, nhờ [quá trình bootstrap dựa trên WebAssembly](/news/goodbye-cpp/).
+
+Với các bản phân phối muốn tránh binary blob, có hướng dẫn chi tiết [tái tạo Zig không dùng binary](https://jakstys.lt/2024/zig-reproduced-without-binaries/).
+
+Trong tương lai, chúng tôi mong sẽ có bên thứ ba viết một trình thông dịch Zig bằng C để rút gọn việc này xuống O(1) bước.
+
+Hệ thống build coi system integration là một ý định tường minh. Ví dụ, cờ `--system <path>` tắt việc fetch package và bật mọi tùy chọn `-fsys=[name]`. Các "system integration option" có sẵn trong build script, giúp người bảo trì gói và tác giả thượng nguồn phối hợp được với nhau. Ít patch hơn cho người bảo trì, và tác giả thượng nguồn có thể đưa ra lựa chọn chủ đích theo cấu hình build của hệ thống.
+
+Các [chế độ build](https://ziglang.org/documentation/master/#Build-Mode) không phải debug đều có tính tái lập / xác định.
+
+Có [phiên bản JSON của trang tải xuống](https://ziglang.org/download/index.json).

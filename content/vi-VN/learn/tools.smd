@@ -1,0 +1,41 @@
+---
+.title = "Công cụ",
+.author = "",
+.date = @date("2024-08-07:00:00:00"),
+.layout = "page.shtml",
+.custom = {
+	"mobile_menu_title": "Công cụ",
+	"toc": true,
+},
+---
+
+# [Language Server]($heading.id('lsp'))
+Language server là công cụ độc lập với trình soạn thảo, cho phép có tô cú pháp, gợi ý tự động và nhiều tính năng khác. Bạn nên dùng language server thay cho extension chỉ tô cú pháp để có trải nghiệm phát triển tốt hơn.
+
+- [zigtools/zls](https://github.com/zigtools/zls)
+
+# [Trình soạn thảo]($heading.id('editors'))
+Công cụ riêng cho từng editor, phần lớn là plugin tô cú pháp.
+
+## VS Code
+- [ziglang/vscode-zig](https://codeberg.org/ziglang/vscode-zig)
+
+## Visual Studio
+- [ZigVS](https://marketplace.visualstudio.com/items?itemName=LuckystarStudio.ZigVS)
+
+## Sublime Text
+- [ziglang/sublime-zig-language](https://codeberg.org/ziglang/sublime-zig-language)
+
+## Vim
+- [ziglang/zig.vim](https://codeberg.org/ziglang/zig.vim)
+
+## Emacs
+- [ziglang/zig-mode](https://codeberg.org/ziglang/zig-mode)
+
+## Kate
+- [ziglang/kde-syntax-highlighting](https://codeberg.org/ziglang/kde-syntax-highlighting)
+
+## Họ JetBrains (IntelliJ IDEA, Fleet)
+- [ZigBrains](https://plugins.jetbrains.com/plugin/22456-zigbrains)
+- [Zig Fleet Plugin](https://plugins.jetbrains.com/plugin/26070-zig)
+
