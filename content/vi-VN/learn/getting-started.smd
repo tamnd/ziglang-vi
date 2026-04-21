@@ -1,0 +1,144 @@
+---
+.title = "Bắt đầu với Zig",
+.author = "",
+.date = @date("2024-08-07:00:00:00"),
+.layout = "page.shtml",
+.custom = {
+	"mobile_menu_title": "Bắt đầu với Zig",
+	"toc": true,
+},
+---
+
+# Bản gắn thẻ hay bản development?
+
+Nhìn chung, bản gắn thẻ (tagged release) hợp với dự án có dependency và cần sự ổn định, còn bản development dành cho những người muốn tham gia phát triển Zig.
+
+Bản cài Zig là một archive độc lập, đặt ở đâu trong máy cũng được. Nhiều phiên bản Zig có thể tồn tại song song mà không xung đột.
+
+# Cài Zig
+## [Tải trực tiếp]($heading.id('direct'))
+Đây là cách đơn giản nhất để có Zig: tải gói Zig phù hợp với nền tảng của bạn từ trang [Tải xuống](/download), giải nén vào một thư mục và thêm vào `PATH` để có thể gọi `zig` từ bất cứ đâu.
+
+### Cấu hình PATH trên Windows
+Để cấu hình PATH trên Windows, chạy **một** trong các đoạn sau trong Powershell.
+Chọn áp dụng cho toàn máy (cần mở Powershell với quyền admin) hay chỉ cho người dùng hiện tại, và **nhớ sửa đoạn snippet để trỏ đúng vị trí Zig trên máy bạn**.
+Dấu `;` trước `C:` không phải typo.
+
+Toàn máy (Powershell **admin**):
+```
+[Environment]::SetEnvironmentVariable(
+   "Path",
+   [Environment]::GetEnvironmentVariable("Path", "Machine") + ";C:\your-path\zig-windows-x86_64-your-version",
+   "Machine"
+)
+```
+
+Người dùng hiện tại (Powershell):
+```
+[Environment]::SetEnvironmentVariable(
+   "Path",
+   [Environment]::GetEnvironmentVariable("Path", "User") + ";C:\your-path\zig-windows-x86_64-your-version",
+   "User"
+)
+```
+Xong thì mở lại Powershell.
+
+### Cấu hình PATH trên Linux, macOS, BSD
+Thêm đường dẫn tới binary `zig` vào biến môi trường PATH.
+
+Thường thì thêm dòng export vào file khởi động của shell (`.profile`, `.zshrc`, ...)
+```bash
+export PATH=$PATH:~/path/to/zig
+```
+Xong rồi thì `source` lại file đó hoặc mở lại shell.
+
+
+
+
+## [Trình quản lý gói]($heading.id('managers'))
+### Windows
+**WinGet**
+Zig có trên [WinGet](https://github.com/microsoft/winget-pkgs/tree/master/manifests/z/zig/zig).
+```
+winget install -e --id zig.zig
+```
+
+**Chocolatey**
+Zig có trên [Chocolatey](https://chocolatey.org/packages/zig).
+```
+choco install zig
+```
+
+**Scoop**
+Zig có trên [Scoop](https://scoop.sh/#/apps?q=zig&id=7e124d6047c32d426e4143ab395d863fc9d6d491).
+```
+scoop install zig
+```
+Bản [dev mới nhất](https://scoop.sh/#/apps?q=zig&id=921df07e75042de645204262e784a17c2421944c):
+```
+scoop bucket add versions
+scoop install versions/zig-dev
+```
+
+### macOS
+
+**Homebrew**
+Bản gắn thẻ mới nhất:
+```
+brew install zig
+```
+
+**MacPorts**
+```
+sudo port install zig
+```
+### Linux
+Zig cũng có trong nhiều trình quản lý gói của Linux.
+
+## [Build từ mã nguồn]($heading.id('source'))
+
+Xem [README.md](https://codeberg.org/ziglang/zig#building-from-source).
+
+# Công cụ khuyến nghị
+## Tô cú pháp và LSP
+Mọi editor lớn đều hỗ trợ tô cú pháp cho Zig. Có editor gộp sẵn, có editor cần cài plugin.
+
+Nếu bạn muốn tích hợp sâu hơn giữa Zig và editor, hãy xem [zigtools/zls](https://github.com/zigtools/zls).
+
+Muốn biết còn gì nữa, ghé mục [Công cụ](tools).
+
+
+# Chạy Hello World
+Nếu cài đặt xong xuôi, bạn đã có thể gọi trình biên dịch Zig từ shell. Thử bằng cách viết chương trình Zig đầu tiên.
+
+Chuyển đến thư mục project và chạy:
+```bash
+mkdir hello-world
+cd hello-world
+zig init
+```
+
+Sẽ thấy output:
+```
+info: created build.zig
+info: created build.zig.zon
+info: created src/main.zig
+info: created src/root.zig
+info: see `zig build --help` for a menu of options
+```
+
+Chạy `zig build run` sẽ biên dịch rồi chạy chương trình, và cho ra:
+```
+All your codebase are belong to us.
+Run `zig build test` to run the tests.
+```
+
+Chúc mừng, Zig của bạn đã chạy được!
+
+# Các bước tiếp theo
+**Ghé các tài liệu khác trong mục [Học](/learn)**, nhớ tìm Tài liệu đúng với phiên bản Zig mà bạn dùng (lưu ý: bản nightly nên đọc tài liệu `master`), và cân nhắc đọc [zig.guide](https://zig.guide).
+
+Zig vẫn là dự án trẻ, chưa đủ nguồn lực làm tài liệu và tài liệu học cho mọi thứ, nên bạn hãy cân nhắc [tham gia một trong những cộng đồng Zig hiện có](/community) để được giúp khi bí, và xem thêm các hoạt động như [Zig SHOWTIME](https://zig.show).
+
+Cuối cùng, nếu thích Zig và muốn đẩy nhanh tiến độ phát triển, [hãy cân nhắc đóng góp cho Zig Software Foundation](/zsf)
+<img src="/heart.svg" style="vertical-align:middle; margin-right: 5px">.

@@ -1,0 +1,387 @@
+---
+.title = "Hệ thống build Zig",
+.author = "",
+.date = @date("2024-08-07:00:00:00"),
+.layout = "page.shtml",
+.custom = {
+	"mobile_menu_title": "Hệ thống build Zig",
+	"toc": true,
+},
+---
+# [Khi nào nên dùng hệ thống build Zig?]($heading.id('build-system'))
+
+Các lệnh cơ bản `zig build-exe`, `zig build-lib`, `zig build-obj` và `zig test` thường đã đủ. Tuy nhiên, đôi khi dự án cần thêm một lớp trừu tượng để quản lý độ phức tạp của việc build từ mã nguồn.
+
+Chẳng hạn, một trong các tình huống sau có thể áp dụng:
+
+- Dòng lệnh quá dài và khó quản lý, bạn muốn có chỗ ghi lại.
+- Bạn muốn build nhiều thứ, hoặc quá trình build gồm nhiều bước.
+- Bạn muốn tận dụng concurrency và cache để giảm thời gian build.
+- Bạn muốn phơi bày các tùy chọn cấu hình cho dự án.
+- Quá trình build khác nhau theo target và các tùy chọn khác.
+- Bạn có dependency vào các dự án khác.
+- Bạn muốn tránh dependency không cần thiết vào cmake, make, shell, msvc, python, v.v., để nhiều người đóng góp hơn có thể tham gia.
+- Bạn muốn cung cấp một gói cho bên thứ ba sử dụng.
+- Bạn muốn có một cách chuẩn hóa để các công cụ như IDE hiểu được cách build dự án về mặt ngữ nghĩa.
+
+Nếu rơi vào bất kỳ tình huống nào ở trên, dự án sẽ có lợi khi dùng hệ thống build Zig.
+
+# [Bắt đầu]($heading.id('getting-started'))
+## [Executable đơn giản]($heading.id('simple'))
+Build script này tạo một executable từ một file Zig có định nghĩa hàm `main` public.
+
+[]($code.language('=html').buildAsset("build-system/1-simple-executable/hello.zig"))
+[]($code.language('=html').buildAsset("build-system/1-simple-executable/build.zig"))
+
+## [Cài đặt artifact build]($heading.id('installing-artifacts'))
+
+Hệ thống build Zig, giống phần lớn hệ thống build khác, mô hình hóa dự án thành một đồ thị có hướng không chu trình (DAG) gồm các step, chạy độc lập và song song được.
+
+Mặc định, step chính trong đồ thị là **Install**, nhiệm vụ là copy artifact build vào chỗ cuối cùng. Step Install khởi đầu không có dependency, nên nếu chỉ chạy `zig build` thì chả có gì xảy ra. Build script của dự án phải thêm việc cần cài vào, đó chính là điều mà `installArtifact` ở trên làm.
+
+**Output**
+```
+├── build.zig
+├── hello.zig
+├── .zig-cache
+└── zig-out
+    └── bin
+        └── hello
+```
+
+Trong output có hai thư mục được sinh ra: `.zig-cache` và `zig-out`. Thư mục đầu chứa file giúp các lần build sau nhanh hơn, không nên commit và có thể xóa hoàn toàn bất cứ lúc nào không sao.
+
+Thư mục thứ hai, `zig-out`, là một "installation prefix". Nó ánh xạ sang khái niệm hệ thống thư mục chuẩn. Thư mục này không do dự án chọn mà do người chạy `zig build` chọn qua cờ `--prefix` (viết tắt `-p`).
+
+Bạn, với vai trò người bảo trì, chọn cái gì được đặt vào thư mục này; còn người dùng chọn cài vào đâu trong hệ thống của họ. Build script không được hard-code đường dẫn output, vì làm vậy sẽ phá cache, concurrency, khả năng kết hợp, và gây khó chịu cho người dùng cuối.
+
+## [Thêm step tiện cho việc chạy ứng dụng]($heading.id('run-step'))
+
+Thêm một step **Run** là chuyện phổ biến, giúp chạy ứng dụng chính trực tiếp từ lệnh build.
+
+[]($code.language('=html').buildAsset("build-system/convenience-run-step/hello.zig"))
+[]($code.language('=html').buildAsset("build-system/convenience-run-step/build.zig"))
+
+# [Căn bản]($heading.id('basics'))
+
+## [Tùy chọn do người dùng cung cấp]($heading.id('user-options'))
+
+Dùng `b.option` để cho phép build script có thể được cấu hình bởi người dùng cuối cũng như bởi các dự án phụ thuộc dự án này như một package.
+
+[]($code.language('=html').buildAsset("build-system/2-user-provided-options/build.zig"))
+[]($code.language('=html').buildAsset("build-system/2-user-provided-options/example.zig"))
+
+Chú ý những dòng sau:
+
+```
+Project-Specific Options:
+  -Dwindows=[bool]             Target Microsoft Windows
+```
+
+Phần này của menu help được tự sinh khi chạy logic trong `build.zig`. Người dùng có thể khám phá các tùy chọn cấu hình của build script qua cách này.
+
+## [Tùy chọn cấu hình chuẩn]($heading.id('standard-options'))
+
+Ở trên ta dùng một cờ boolean để ra hiệu build cho Windows. Nhưng có thể làm tốt hơn.
+
+Phần lớn dự án muốn cho phép thay đổi target và tùy chọn tối ưu. Để khuyến khích quy ước đặt tên chuẩn cho các tùy chọn này, Zig có hai hàm tiện ích `standardTargetOptions` và `standardOptimizeOption`.
+
+Standard target options cho phép người chạy `zig build` chọn target để build. Mặc định, mọi target đều được phép, và không chọn thì target là máy host. Còn các tùy chọn khác để hạn chế tập target hỗ trợ cũng có sẵn.
+
+Standard optimization options cho phép người chạy `zig build` chọn giữa `Debug`, `ReleaseSafe`, `ReleaseFast` và `ReleaseSmall`. Mặc định build script không coi chế độ release nào là lựa chọn ưa thích; người dùng phải quyết định để tạo bản release.
+
+[]($code.language('=html').buildAsset("build-system/3-standard-config-options/hello.zig"))
+[]($code.language('=html').buildAsset("build-system/3-standard-config-options/build.zig"))
+
+Giờ menu `--help` có nhiều mục hơn:
+
+```
+Project-Specific Options:
+  -Dtarget=[string]            The CPU architecture, OS, and ABI to build for
+  -Dcpu=[string]               Target CPU features to add or subtract
+  -Doptimize=[enum]            Prioritize performance, safety, or binary size (-O flag)
+                                 Supported Values:
+                                   Debug
+                                   ReleaseSafe
+                                   ReleaseFast
+                                   ReleaseSmall
+```
+
+Hoàn toàn có thể tạo các tùy chọn này qua `b.option` trực tiếp, nhưng API này đưa ra quy ước đặt tên thường dùng cho những cấu hình hay dùng này.
+
+Ở output terminal, để ý là ta truyền `-Dtarget=x86_64-windows -Doptimize=ReleaseSmall`. So với ví dụ đầu, giờ file trong installation prefix khác đi:
+
+```
+zig-out/
+└── bin
+    └── hello.exe
+```
+
+## [Tùy chọn cho biên dịch có điều kiện]($heading.id('conditional-compilation'))
+
+Để truyền tùy chọn từ build script vào mã Zig của dự án, dùng step `Options`.
+
+[]($code.language('=html').buildAsset("build-system/conditional-compilation/app.zig"))
+[]($code.language('=html').buildAsset("build-system/conditional-compilation/build.zig"))
+
+Trong ví dụ này, dữ liệu mà `@import("config")` cung cấp là comptime-known, nên `@compileError` không kích hoạt. Nếu ta truyền `-Dversion=0.2.3` hoặc bỏ qua tùy chọn này, việc biên dịch `app.zig` sẽ fail với lỗi "too old".
+
+## [Thư viện tĩnh]($heading.id('static-library'))
+
+Build script này tạo một thư viện tĩnh từ mã Zig, rồi cũng tạo một executable từ mã Zig khác sử dụng thư viện đó.
+
+[]($code.language('=html').buildAsset("build-system/simple-static-library/fizzbuzz.zig"))
+[]($code.language('=html').buildAsset("build-system/simple-static-library/demo.zig"))
+[]($code.language('=html').buildAsset("build-system/simple-static-library/build.zig"))
+
+Trong trường hợp này, chỉ có thư viện tĩnh được cài:
+
+```
+zig-out/
+└── lib
+    └── libfizzbuzz.a
+```
+
+Tuy nhiên, để ý build script có một tùy chọn cài thêm cả demo. Nếu truyền thêm `-Denable-demo`, trong installation prefix ta thấy:
+
+```
+zig-out/
+├── bin
+│   └── demo
+└── lib
+    └── libfizzbuzz.a
+```
+
+Lưu ý, dù `addExecutable` được gọi không điều kiện, hệ thống build thực tế không tốn thời gian build `demo` trừ khi được yêu cầu bằng `-Denable-demo`, vì hệ thống build dựa trên đồ thị có hướng không chu trình, với các cạnh phụ thuộc.
+
+## [Thư viện động]($heading.id('dynamic-library'))
+
+Ở đây ta giữ nguyên mọi file từ ví dụ [Thư viện tĩnh](#static-library), chỉ thay đổi `build.zig`.
+
+[]($code.language('=html').buildAsset("build-system/dynamic-library/build.zig"))
+
+**Output**
+```
+zig-out
+└── lib
+    ├── libfizzbuzz.so -> libfizzbuzz.so.1
+    ├── libfizzbuzz.so.1 -> libfizzbuzz.so.1.2.3
+    └── libfizzbuzz.so.1.2.3
+```
+
+Giống ví dụ thư viện tĩnh, để một executable link vào nó, dùng đoạn như thế này:
+
+```zig
+exe.linkLibrary(libfizzbuzz);
+```
+
+## [Kiểm thử]($heading.id('testing'))
+
+Có thể test từng file trực tiếp bằng `zig test foo.zig`, nhưng với trường hợp phức tạp hơn, nên điều phối việc test qua build script.
+
+Khi dùng build script, unit test được tách thành hai step khác nhau trong đồ thị build: **Compile** và **Run**. Không có lời gọi `addRunArtifact` để thiết lập cạnh phụ thuộc giữa hai step, unit test sẽ không chạy.
+
+Step *Compile* có thể cấu hình giống mọi executable, library hay object file khác, ví dụ [link với thư viện hệ thống](#linking-to-system-libraries), cấu hình target, hoặc thêm đơn vị biên dịch.
+
+Step *Run* có thể cấu hình giống mọi Run step, ví dụ bỏ qua khi host không chạy được binary.
+
+Khi dùng hệ thống build để chạy unit test, build runner và test runner giao tiếp qua *stdin* và *stdout* để có thể chạy nhiều bộ unit test song song và báo lỗi test một cách rõ ràng mà không bị trộn output vào nhau. Đây là một lý do [việc ghi ra *standard out* trong unit test là có vấn đề](https://github.com/ziglang/zig/issues/15091): nó sẽ chen vào kênh giao tiếp này. Ngược lại, cơ chế này sẽ mở đường cho một tính năng sắp tới là [khả năng để unit test mong đợi một *panic*](https://github.com/ziglang/zig/issues/1356).
+
+[]($code.language('=html').buildAsset("build-system/unit-testing/main.zig"))
+[]($code.language('=html').buildAsset("build-system/unit-testing/build.zig"))
+
+Trong trường hợp này, bật `skip_foreign_checks` cho unit test có thể là điều chỉnh hợp lý:
+
+```diff
+@@ -23,6 +23,7 @@
+         });
+
+         const run_unit_tests = b.addRunArtifact(unit_tests);
++        run_unit_tests.skip_foreign_checks = true;
+         test_step.dependOn(&run_unit_tests.step);
+     }
+ }
+```
+
+[]($code.language('=html').buildAsset("build-system/unit-testing-skip-foreign/build.zig"))
+
+## [Link với thư viện hệ thống]($heading.id('linking-to-system-libraries'))
+
+Có hai cách để đáp ứng dependency thư viện:
+
+1. Cung cấp các thư viện này qua hệ thống build Zig (xem [Quản lý gói](#) và [Thư viện tĩnh](#static-library)).
+2. Dùng file do hệ thống host cung cấp.
+
+Với người bảo trì dự án thượng nguồn, lấy thư viện qua hệ thống build Zig cho ít ma sát nhất và đặt quyền cấu hình vào tay người bảo trì. Mọi người build theo cách này đều có kết quả tái lập, nhất quán, chạy trên mọi hệ điều hành và hỗ trợ cả biên dịch chéo. Hơn nữa, cách này cho phép dự án quyết định chính xác phiên bản của toàn bộ cây dependency muốn build. Đây được kỳ vọng là cách nói chung được ưa thích để phụ thuộc vào thư viện bên ngoài.
+
+Tuy nhiên, với tình huống đóng gói phần mềm vào các repo như Debian, Homebrew hay Nix, việc link với thư viện hệ thống là bắt buộc. Nên build script phải [phát hiện chế độ build](https://github.com/ziglang/zig/issues/14281) và cấu hình cho phù hợp.
+
+[]($code.language('=html').buildAsset("build-system/system-libraries/build.zig"))
+
+Người dùng `zig build` có thể dùng `--search-prefix` để bổ sung các thư mục được coi là "thư mục hệ thống" khi tìm thư viện tĩnh và động.
+
+# [Sinh file]($heading.id('generating-files'))
+
+## [Chạy công cụ hệ thống]($heading.id('system-tools'))
+Bản hello world này kỳ vọng có một file `word.txt` ở cùng đường dẫn, và ta dùng công cụ hệ thống để sinh file này từ một file JSON.
+
+Lưu ý, dependency hệ thống khiến dự án của bạn khó build hơn cho người dùng. Build script này phụ thuộc vào `jq`, thứ không có mặc định trong phần lớn bản phân phối Linux, và có thể lạ với người dùng Windows.
+
+Phần tiếp theo sẽ thay `jq` bằng một công cụ Zig đi kèm trong cây mã nguồn, là cách được ưa chuộng hơn.
+
+**`words.json`**
+```json
+{
+  "en": "world",
+  "it": "mondo",
+  "ja": "世界"
+}
+```
+
+[]($code.language('=html').buildAsset("build-system/10.5-system-tool/src/main.zig"))
+[]($code.language('=html').buildAsset("build-system/10.5-system-tool/build.zig"))
+
+**Output**
+
+```
+zig-out
+├── hello
+└── word.txt
+```
+
+Chú ý `captureStdOut` tạo một file tạm chứa output của lần chạy `jq`.
+
+## [Chạy công cụ của dự án]($heading.id('project-tools'))
+
+Bản hello world này kỳ vọng có file `word.txt` ở cùng đường dẫn, và ta muốn sinh nó tại build-time bằng cách gọi một chương trình Zig lên file JSON.
+
+**`tools/words.json`**
+```json
+{
+  "en": "world",
+  "it": "mondo",
+  "ja": "世界"
+}
+```
+
+[]($code.language('=html').buildAsset("build-system/11-zig-tool/src/main.zig"))
+
+[]($code.language('=html').buildAsset("build-system/11-zig-tool/tools/word_select.zig"))
+
+[]($code.language('=html').buildAsset("build-system/11-zig-tool/build.zig"))
+
+**Output**
+
+```
+zig-out
+├── hello
+└── word.txt
+```
+
+
+## [Sinh asset cho `@embedFile`]($heading.id('embed-file'))
+
+Bản hello world này muốn `@embedFile` một asset sinh tại build-time, ta sẽ sản xuất bằng một công cụ viết bằng Zig.
+
+**`tools/words.json`**
+```json
+{
+  "en": "world",
+  "it": "mondo",
+  "ja": "世界"
+}
+```
+
+[]($code.language('=html').buildAsset("build-system/12-embedfile/src/main.zig"))
+
+[]($code.language('=html').buildAsset("build-system/12-embedfile/tools/word_select.zig"))
+
+[]($code.language('=html').buildAsset("build-system/12-embedfile/build.zig"))
+
+**Output**
+
+```
+zig-out/
+└── bin
+    └── hello
+```
+
+## [Sinh mã nguồn Zig]($heading.id('generating-zig'))
+File build này dùng một chương trình Zig để sinh một file Zig, rồi phơi file đó cho chương trình chính như một module dependency.
+
+[]($code.language('=html').buildAsset("build-system/13-import/src/main.zig"))
+[]($code.language('=html').buildAsset("build-system/13-import/tools/generate_struct.zig"))
+[]($code.language('=html').buildAsset("build-system/13-import/build.zig"))
+
+**Output**
+
+```
+zig-out/
+└── bin
+    └── hello
+```
+
+## [Xử lý một hay nhiều file được sinh ra]($heading.id('write-files'))
+
+Step **WriteFiles** cung cấp cách sinh một hay nhiều file cùng chung thư mục cha. Thư mục sinh ra nằm trong `.zig-cache` cục bộ, và mỗi file sinh ra có thể truy cập độc lập dưới dạng `std.Build.LazyPath`. Bản thân thư mục cha cũng có dạng `LazyPath`.
+
+API này hỗ trợ cả ghi chuỗi bất kỳ vào thư mục sinh ra, lẫn copy file vào đó.
+
+[]($code.language('=html').buildAsset("build-system/write-files/src/main.zig"))
+[]($code.language('=html').buildAsset("build-system/write-files/build.zig"))
+
+**Output**
+
+```
+zig-out/
+└── project.tar.gz
+```
+
+## [Sửa file mã nguồn tại chỗ]($heading.id('mutating-source'))
+
+Không phổ biến, nhưng đôi khi dự án commit file được sinh ra vào version control. Việc này có ích khi các file sinh ra ít cập nhật và quá trình cập nhật có dependency hệ thống phức tạp, nhưng *chỉ* trong lúc cập nhật. **UpdateSourceFiles** là cách để làm việc này.
+
+Hãy cẩn trọng khi dùng tính năng này; nó không nên dùng trong quá trình build bình thường, mà là một tiện ích để lập trình viên chạy chủ đích để cập nhật file mã nguồn rồi commit vào version control. Nếu dùng trong build bình thường, nó sẽ gây lỗi cache và concurrency.
+
+[]($code.language('=html').buildAsset("build-system/mutate-source-files/tools/proto_gen.zig"))
+[]($code.language('=html').buildAsset("build-system/mutate-source-files/src/main.zig"))
+[]($code.language('=html').buildAsset("build-system/mutate-source-files/src/protocol.zig"))
+[]($code.language('=html').buildAsset("build-system/mutate-source-files/build.zig"))
+
+```=html
+<pre><code class="shell">$ zig build update-protocol --summary all
+<span class="sgr-36m">Build Summary:</span> 4/4 steps succeeded
+update-protocol<span class="sgr-32m"> success</span>
+└─ WriteFile<span class="sgr-32m"> success</span>
+   └─ run proto_gen (protocol.zig)<span class="sgr-32m"> success</span><span class="sgr-2m"> 401us</span><span class="sgr-2m"> MaxRSS:1M</span>
+      └─ zig build-exe proto_gen Debug native<span class="sgr-32m"> success</span><span class="sgr-2m"> 1s</span><span class="sgr-2m"> MaxRSS:183M</span>
+</code></pre>
+```
+
+Sau khi chạy lệnh này, `src/protocol.zig` được cập nhật tại chỗ.
+
+# [Ví dụ tiện dụng]($heading.id('examples'))
+
+## [Build cho nhiều target để tạo bản release]($heading.id('release'))
+
+Ở ví dụ này ta sẽ đổi một vài mặc định khi tạo step `InstallArtifact` để đặt bản build của mỗi target vào một thư mục con riêng trong install path.
+
+[]($code.language('=html').buildAsset("build-system/10-release/build.zig"))
+[]($code.language('=html').buildAsset("build-system/10-release/hello.zig"))
+
+**Output**
+
+```
+zig-out
+├── aarch64-linux
+│   └── hello
+├── aarch64-macos
+│   └── hello
+├── x86_64-linux-gnu
+│   └── hello
+├── x86_64-linux-musl
+│   └── hello
+└── x86_64-windows
+    ├── hello.exe
+    └── hello.pdb
+```

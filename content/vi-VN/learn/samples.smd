@@ -1,0 +1,48 @@
+---
+.title = "Ví dụ mã",
+.author = "",
+.date = @date("2024-08-07:00:00:00"),
+.layout = "page.shtml",
+.custom = {
+	"mobile_menu_title": "Ví dụ mã",
+	"toc": true,
+},
+---
+
+# [Hello world]($heading.id('hello'))
+Một ví dụ tối thiểu in ra hello world.
+
+[]($code.language('=html').buildAsset("samples/hello-world.zig"))
+
+# [Gọi hàm từ thư viện ngoài]($heading.id('ext'))
+Mọi hàm API của hệ điều hành đều có thể gọi theo cách này, không cần binding thư viện riêng.
+
+[]($code.language('=html').buildAsset("samples/windows-msgbox.zig"))
+
+# [Phát hiện rò bộ nhớ]($heading.id('leak'))
+Dùng `std.heap.GeneralPurposeAllocator` để phát hiện double free và rò bộ nhớ.
+
+[]($code.language('=html').buildAsset("samples/memory-leak.zig"))
+
+
+# [Tương tác với C]($heading.id('c-interop'))
+Ví dụ import một header C và liên kết với cả libc lẫn raylib.
+
+[]($code.language('=html').buildAsset("samples/c-interop.zig"))
+
+
+# [Zigg Zagg]($heading.id('zigg-zagg'))
+Zig *được tối ưu* cho phỏng vấn lập trình (đùa thôi).
+
+[]($code.language('=html').buildAsset("samples/ziggzagg.zig"))
+
+
+# [Kiểu generic]($heading.id('generic'))
+Trong Zig, kiểu là giá trị comptime, nên ta dùng hàm trả về kiểu để cài đặt thuật toán và cấu trúc dữ liệu generic. Ví dụ này cài đặt một hàng đợi generic đơn giản rồi kiểm thử nó.
+
+[]($code.language('=html').buildAsset("samples/generic-type.zig"))
+
+
+# [Dùng cURL từ Zig]($heading.id('curl'))
+
+[]($code.language('=html').buildAsset("samples/curl.zig"))

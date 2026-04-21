@@ -1,0 +1,97 @@
+---
+.title = "Tại sao chọn Zig khi đã có C++, D và Rust?",
+.author = "",
+.date = @date("2024-08-07:00:00:00"),
+.layout = "page.shtml",
+.custom = {
+	"mobile_menu_title": "Tại sao Zig?",
+},
+---
+
+# Không có luồng điều khiển ẩn
+
+Nếu mã Zig không trông như đang nhảy đi gọi một hàm khác, thì nó không gọi. Nghĩa là đoạn sau chỉ gọi `foo()` rồi `bar()`, và điều đó được đảm bảo mà không cần biết kiểu của bất kỳ biến nào:
+
+```zig
+var a = b + c.d;
+foo();
+bar();
+```
+
+Ví dụ về luồng điều khiển ẩn:
+
+* D có hàm `@property`, tức là method trông như truy cập field, nên trong ví dụ trên `c.d` có thể gọi hàm.
+* C++, D và Rust có overload toán tử, nên `+` có thể đang gọi hàm.
+* C++, D và Go có throw/catch exception (đôi khi gọi là panic/recover), nên `foo()` có thể ném exception và ngăn `bar()` chạy. (Đương nhiên, kể cả trong Zig thì `foo()` vẫn có thể deadlock và `bar()` không được gọi, nhưng chuyện đó xảy ra ở mọi ngôn ngữ Turing-complete.)
+
+Quyết định thiết kế này nhằm tăng khả năng đọc mã.
+
+# Không có cấp phát ẩn
+
+Zig không can thiệp vào việc cấp phát heap. Không có từ khóa `new` hay bất kỳ tính năng ngôn ngữ nào dùng heap allocator (ví dụ toán tử nối chuỗi[1]). Toàn bộ khái niệm heap được quản lý bởi thư viện và mã ứng dụng, không phải bởi bản thân ngôn ngữ.
+
+Ví dụ về cấp phát ẩn:
+
+* `defer` của Go cấp phát bộ nhớ vào một stack cục bộ của hàm. Ngoài việc khó trực giác, nó còn có thể gây out-of-memory nếu bạn dùng `defer` trong vòng lặp.
+* Coroutine của C++ cấp phát bộ nhớ heap mỗi khi gọi coroutine.
+* Trong Go, một lần gọi hàm cũng có thể gây cấp phát heap vì goroutine dùng stack nhỏ và được nới ra khi call stack đủ sâu.
+* Phần lớn API thư viện chuẩn của Rust panic khi hết bộ nhớ, còn các API thay thế nhận allocator thì bị đặt xuống hàng hai (xem [rust-lang/rust#29802](https://github.com/rust-lang/rust/issues/29802)).
+
+Gần như mọi ngôn ngữ có bộ gom rác đều có cấp phát ẩn rải rác, vì GC giấu dấu vết ở phần dọn dẹp.
+
+Vấn đề lớn nhất của cấp phát ẩn là nó giảm *khả năng tái sử dụng* của một đoạn mã, bó hẹp các môi trường mà đoạn mã đó có thể triển khai. Nói gọn: có những tình huống bắt buộc phải tin rằng luồng điều khiển và các cuộc gọi hàm không có tác dụng phụ là cấp phát bộ nhớ, và một ngôn ngữ lập trình chỉ phục vụ được những tình huống đó nếu nó thật sự bảo đảm được điều này.
+
+Trong Zig, thư viện chuẩn có các tiện ích cung cấp và làm việc với heap allocator, nhưng đó là tính năng tùy chọn của thư viện chuẩn, không gắn vào ngôn ngữ. Nếu bạn không bao giờ khởi tạo heap allocator, bạn có thể yên tâm rằng chương trình của mình không cấp phát heap.
+
+Mọi tính năng trong thư viện chuẩn cần cấp bộ nhớ heap đều nhận tham số `Allocator` để làm điều đó. Nhờ vậy thư viện chuẩn của Zig hỗ trợ cả target freestanding. Ví dụ `std.ArrayList` và `std.AutoHashMap` có thể dùng cho lập trình bare metal.
+
+Allocator tùy biến làm cho việc quản lý bộ nhớ thủ công nhẹ nhàng hơn nhiều. Zig có debug allocator giữ an toàn bộ nhớ ngay cả khi có use-after-free hay double-free. Nó tự phát hiện rò bộ nhớ và in stack trace. Có arena allocator để gộp nhiều lần cấp phát vào một và giải phóng cùng lúc, thay vì phải quản lý từng lần riêng. Allocator chuyên dụng có thể giúp tăng hiệu năng hoặc giảm dùng bộ nhớ cho từng nhu cầu cụ thể.
+
+[1]: Thực ra có toán tử nối chuỗi (tổng quát hơn là nối mảng), nhưng nó chỉ chạy tại thời điểm biên dịch, nên không gây cấp phát heap lúc runtime.
+
+# Hỗ trợ bậc nhất cho việc không dùng thư viện chuẩn
+
+Như đã gợi ý, thư viện chuẩn của Zig là hoàn toàn tùy chọn. API nào được dùng thì mới được biên dịch vào chương trình. Zig hỗ trợ như nhau cả việc liên kết với libc lẫn không liên kết. Zig thân thiện với lập trình bare metal và hiệu năng cao.
+
+Đây là cái được cả hai đầu: ví dụ với Zig, chương trình WebAssembly có thể dùng các tính năng bình thường của thư viện chuẩn và vẫn cho ra binary nhỏ nhất so với các ngôn ngữ khác biên dịch được sang WebAssembly.
+
+# Một ngôn ngữ khả chuyển cho thư viện
+
+Một trong những mục tiêu thiêng liêng của lập trình là tái sử dụng mã. Đáng buồn là trong thực tế ta liên tục phát minh lại cái bánh xe. Thường thì có lý do:
+
+ * Nếu ứng dụng có ràng buộc real-time, mọi thư viện dùng bộ gom rác hoặc bất kỳ hành vi phi xác định nào đều bị loại khỏi danh sách dependency.
+ * Nếu một ngôn ngữ quá dễ bỏ qua lỗi và khó xác minh rằng thư viện xử lý và đẩy lỗi đúng cách, người ta sẽ muốn bỏ thư viện đó để tự viết lại cho chắc. Zig được thiết kế sao cho việc lười nhất mà một lập trình viên có thể làm chính là xử lý lỗi đúng cách, nên ta có cơ sở tin rằng thư viện sẽ đẩy lỗi lên đúng nơi.
+ * Trên thực tế hiện nay, C là ngôn ngữ đa năng và khả chuyển nhất. Một ngôn ngữ không thể tương tác với mã C thì dễ rơi vào ẩn danh. Zig đang hướng tới vai trò ngôn ngữ khả chuyển mới cho thư viện, bằng cách vừa giúp viết hàm tuân thủ C ABI một cách đơn giản, vừa đem lại thiết kế an toàn hơn giúp tránh những lỗi phổ biến trong phần triển khai.
+
+# Trình quản lý gói và hệ thống build cho dự án có sẵn
+
+Zig không chỉ là ngôn ngữ lập trình mà còn là một bộ công cụ. Nó đi kèm [hệ thống build và trình quản lý gói](/learn/build-system/) hữu ích ngay cả với dự án C/C++ truyền thống.
+
+Bạn không chỉ có thể viết Zig thay cho C hay C++, mà còn có thể dùng Zig thay thế cho autotools, cmake, make, scons, ninja, v.v. Và trên hết, nó đi kèm trình quản lý gói cho các dependency native. Hệ thống build này dùng được ngay cả khi toàn bộ mã nguồn của dự án là C hoặc C++. Ví dụ, khi [port ffmpeg sang zig build system](https://github.com/andrewrk/ffmpeg), việc biên dịch ffmpeg trên mọi hệ thống hỗ trợ, ra mọi target hỗ trợ, chỉ cần [bản tải Zig khoảng 50 MiB](/download/). Với dự án mã nguồn mở, việc build từ mã nguồn và cả biên dịch chéo được làm cho đơn giản có thể chính là khác biệt giữa thu hút hay mất người đóng góp giá trị.
+
+Trình quản lý gói của hệ điều hành như apt-get, pacman, homebrew, v.v. rất cần cho trải nghiệm người dùng cuối, nhưng không đáp ứng được nhu cầu của lập trình viên. Trình quản lý gói dành riêng cho ngôn ngữ có thể là khác biệt giữa không có người đóng góp và có nhiều người đóng góp. Với dự án mã nguồn mở, độ khó để build được dự án lần đầu là một rào cản lớn với người đóng góp tiềm năng. Với dự án C/C++, dependency có thể là tử thần, đặc biệt trên Windows (nơi không có package manager mặc định). Kể cả khi chỉ build Zig, phần lớn người đóng góp tiềm năng đã gặp khó khăn với dependency LLVM. Zig cho phép dự án phụ thuộc trực tiếp vào thư viện native, không cần package manager hệ thống của người dùng có đúng phiên bản, và gần như chắc chắn build được ngay lần đầu dù hệ thống nào cũng như target nền tảng nào.
+
+**Các ngôn ngữ khác cũng có trình quản lý gói, nhưng chúng không xóa bỏ được cơn đau đầu về dependency hệ thống như Zig làm.**
+
+Zig có thể thay hệ thống build của dự án bằng một API khai báo viết trong một ngôn ngữ hợp lý, đồng thời đi kèm quản lý gói, và nhờ đó thực sự có thể phụ thuộc vào các thư viện C khác. Có dependency mở đường cho trừu tượng cao hơn, và nhờ thế mà mã tái sử dụng ở tầng cao lan rộng.
+
+# Tính đơn giản
+
+C++, Rust và D có số lượng tính năng quá lớn, làm lập trình viên mất tập trung khỏi ý nghĩa thực sự của ứng dụng đang viết. Rốt cuộc người ta lại đang gỡ lỗi kiến thức về ngôn ngữ lập trình thay vì gỡ lỗi chính ứng dụng.
+
+Zig không có macro mà vẫn đủ mạnh để diễn đạt chương trình phức tạp một cách rõ ràng, không lặp lại. Ngay cả Rust cũng có macro với những trường hợp đặc biệt như `format!`, được cài đặt trong chính trình biên dịch. Trong khi đó, hàm tương đương ở Zig được cài đặt trong thư viện chuẩn, không có mã đặc biệt nào trong trình biên dịch.
+
+# Bộ công cụ
+
+Có thể tải Zig từ [mục tải xuống](/download/). Zig có bản nhị phân cho Linux, Windows và macOS. Dưới đây là những gì bạn nhận được trong gói tải về:
+
+* cài bằng cách tải và giải nén một archive duy nhất, không cần cấu hình hệ thống
+* biên dịch tĩnh nên không có dependency runtime
+* hỗ trợ LLVM cho bản build tối ưu kèm backend riêng của Zig cho tốc độ biên dịch nhanh hơn
+* có cả backend xuất mã C
+* biên dịch chéo sang hầu hết nền tảng lớn, không cần cấu hình thêm
+* đi kèm mã nguồn libc, sẽ được biên dịch động khi cần cho mọi nền tảng hỗ trợ
+* đi kèm hệ thống build có concurrency và cache
+* biên dịch mã C và C++ kèm hỗ trợ libc
+* tương thích command line với GCC/Clang qua `zig cc`
+* trình biên dịch resource cho Windows
