@@ -30,7 +30,7 @@ jobs:
           version: 0.16.0
 
       - name: Build site to docs/
-        run: zig build -p docs --summary all
+        run: zig build -Dskip-release-notes=true -p docs --summary all
 
       - name: Rewrite absolute URLs for project-page base path
         run: bash .github/scripts/rewrite-base.sh docs /ziglang-vi
