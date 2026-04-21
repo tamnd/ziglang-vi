@@ -4,3 +4,4 @@ zig-out/
 /resources
 doctest-*
 /public
+/docs
